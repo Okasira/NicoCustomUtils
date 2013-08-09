@@ -108,7 +108,7 @@ function RemodelIllustHeaderStyle()
 	/* スタイル追加 {{{*/
 	var	StyleElement		= new CreEle( 'style' );
 	StyleElement.type		= 'text/css';
-	StyleElement.id			= 'RemodelIllustHeader';
+	StyleElement.id			= 'RemodelIllustHeaderStyle';
 	StyleElement.appendChild( new CreTNode( RemodelStyle ) );
 	( new ByTag( 'head' ) )[0].appendChild( StyleElement );
 	/*}}}*/
@@ -526,7 +526,38 @@ function RemodelClipMenuStyle()
 	/* スタイル追加 {{{*/
 	var	StyleElement		=  new CreEle( 'style' );
 	StyleElement.type		= 'text/css';
-	StyleElement.id			= 'RemodelClipStyle';
+	StyleElement.id			= 'RemodelClipMenuStyle';
+	StyleElement.appendChild( new CreTNode( RemodelStyle ) );
+	( new ByTag( 'head' ) )[0].appendChild( StyleElement );
+	/*}}}*/
+}
+/*}}}*/
+
+/* RemodelClipHeaderStyle() : クリップページメニューヘッダスタイルシート追加関数 {{{*/
+function RemodelClipHeaderStyle()
+{
+	/* スタイル定義 {{{*/
+	var RemodelStyle = ''	+
+	/* クリップメニューグループの変更 {{{*/
+	'#HeaderDiv'									+
+	'{'												+
+	'	display:		block;'						+
+	'	position:		relative;'					+
+	'	height:			auto;'						+
+	'	padding:		2px;'						+
+	'	border:			1px solid silver;'			+
+	'	border-radius:	4px;'						+
+	'	box-shadow:		2px 2px 2px rgba(0, 0, 0, 0.2);'					+
+	'	background:		linear-gradient( to bottom, aliceblue, lavender );'	+
+	'}'												+
+	/*}}}*/
+	'';
+	/*}}}*/
+
+	/* スタイル追加 {{{*/
+	var	StyleElement		=  new CreEle( 'style' );
+	StyleElement.type		= 'text/css';
+	StyleElement.id			= 'RemodelClipMenuStyle';
 	StyleElement.appendChild( new CreTNode( RemodelStyle ) );
 	( new ByTag( 'head' ) )[0].appendChild( StyleElement );
 	/*}}}*/
@@ -536,6 +567,53 @@ function RemodelClipMenuStyle()
 /* RemodelPersonalizeStyle() : イラスト定点観測スタイルシート追加関数 {{{*/
 function RemodelPersonalizeStyle()
 {
+	/* スタイル定義 {{{*/
+	var RemodelStyle = ''			+
+	// タイトル
+	'.title_block'					+
+	'{'								+
+	'	margin-left:	23px;'		+
+	'	cursor:			pointer;'	+
+	'}'								+
+	'.title_block::before'							+
+	'{'												+
+	'	display:			inline-block;'			+
+	'	position:			absolute;'				+
+	'	top:				-2px;'					+
+	'	right:				100%;'					+
+	'	padding:			0px 4px;'				+
+	'	color:				black;'					+
+	'	line-height:		25px;'					+
+	'	font-size:			20px;'					+
+	'	text-decoration:	none;'					+
+	'	text-shadow:		4px 4px 4px silver;'	+
+	'	transform:			scale( 1.4, 1 );'		+
+	'	content:			"▲";'					+
+	'}'												+
+	'.title_block.close::before'					+
+	'{'												+
+	'	content:			"▼";'					+
+	'}'												+
+	// 説明
+	'.title_block+.illust_user_exp'					+
+	'{'												+
+	'	height:			100%;'						+
+	'	transition:		height 1s linear 0s;'		+
+	'}'												+
+	'.title_block.close+.illust_user_exp'			+
+	'{'												+
+	'	height:			0px;'						+
+	'}'												+
+	'';
+	/*}}}*/
+
+	/* スタイル追加 {{{*/
+	var	StyleElement		= new CreEle( 'style' );
+	StyleElement.type		= 'text/css';
+	StyleElement.id			= 'RemodelPersonalizeStyle';
+	StyleElement.appendChild( new CreTNode( RemodelStyle ) );
+	( new ByTag( 'head' ) )[0].appendChild( StyleElement );
+	/*}}}*/
 }
 /*}}}*/
 
@@ -559,6 +637,8 @@ window.opera.addEventListener(
 		else if( /\/my\/clip/.test( window.location.href ) )
 		{
 			new RemodelClipMenuStyle();
+
+			new RemodelClipHeaderStyle();
 		}
 		/* イラスト定点観測のハンドラ */
 		else if( /\/my\/personalize/.test( window.location.href ) )

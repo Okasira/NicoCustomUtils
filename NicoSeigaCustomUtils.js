@@ -39,10 +39,10 @@ var classifyRule	=
 		'霊夢・魔理沙':		[ '霊夢', '魔理沙' ],
 		'星蓮船':			[ 'ナズ', '小傘', '一輪', '雲山', '村紗', '寅丸', '聖', 'ぬえ' ],
 		'地霊殿':			[ 'キスメ', '黒谷', 'パルスィ', '勇儀', '古明地', '燐', '霊烏路(?:|空)', 'お空', 'さとり', 'こいし' ],
-		'風神録':			[ '静葉', '穣子', '鍵山雛', 'にとり', '秋姉妹' ],
+		'風神録':			[ '静葉', '穣子', '鍵山雛', 'にとり', '秋姉妹', 'ニトアリ' ],
 		'花映塚':			[ '幽香', 'メディスン', '(?:|小野塚)小町', '(?:|四季)映姫' ],
 		'永夜抄':			[ 'リグル', 'ミスティア', '慧音', 'てゐ', '鈴仙', '永琳', '輝夜', '妹紅', 'うどんげ', '八意', '白沢' ],
-		'妖々夢':			[ 'レティ', '橙', 'アリス', 'プリズムリバー', '八雲', '妖夢', '幽々子', '西行寺', '魂魄', '妖忌' ],
+		'妖々夢':			[ 'レティ', '橙', 'アリス', 'プリズムリバー', '八雲', '妖夢', '幽々子', '西行寺', '魂魄', '妖忌', 'マリアリ' ],
 		'紅魔郷':			[ 'ルーミア', '美鈴', '小悪魔', 'パチュリー', '咲夜', 'レミリア', 'フラン', 'スカーレット' ],
 		'いろいろ':			[ '東方' ],
 	},
@@ -342,6 +342,21 @@ function RemodelClipPage()
 		DeleteIllustCheck.appendChild( CheckButton );
 		DeleteIllustCheck.appendChild( new CreTNode( 'する' ) );
 		( new ByID( 'clip_area' ) ).insertBefore( DeleteIllustCheck, ( new ByClass( 'mode_button_list' ) )[0] );
+	} )();
+	/*}}}*/
+
+	/* ページタイトルからページ選択までを一つのdviに納める {{{*/
+	( function()
+	{
+		var clipArea	= new ByID( 'clip_area' );
+		var headerDiv	= clipArea.appendChild( new CreEle( 'div' ) );
+		headerDiv.id	= 'HeaderDiv';
+		var searchBase	= new ByClass( clipArea, 'list_body' )[0];
+		while( searchBase.previousElementSibling != null )
+		{
+			headerDiv.insertBefore( searchBase.previousSibling, headerDiv.firstChild );
+		}
+		searchBase.parentElement.insertBefore( headerDiv, searchBase );
 	} )();
 	/*}}}*/
 
