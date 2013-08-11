@@ -507,17 +507,29 @@ function RemodelClipPage()
 /* RemodelIllustHeader() : イラストページのヘッダを改造 {{{*/
 function RemodelIllustHeader()
 {
+	/* タイトルとinfoを上下入れ替え調整 {{{*/
+	( function()
+	{
+		var titleBlock	= ( new ByClass( 'title_block' ) )[0];
+		var exp_header	= titleBlock.parentNode;
+		exp_header.insertBefore( titleBlock, exp_header.firstChild );
+	} )();
+	/*}}}*/
+	
 	/* タイトルクリックでイラスト説明文を開閉 {{{*/
-	var title = ( new ByClass( 'title_block' ) )[0];
-	title.addEventListener(
-		'click',
-		function()
-		{
-			var titleBlock	= ( new ByClass( 'title_block' ) )[0];
-			titleBlock.classList.toggle( 'close' );
-		},
-		false
-		);
+	( function()
+	{
+		var title = ( new ByClass( 'title_block' ) )[0];
+		title.addEventListener(
+			'click',
+			function()
+			{
+				var titleBlock	= ( new ByClass( 'title_block' ) )[0];
+				titleBlock.classList.toggle( 'open' );
+			},
+			false
+			);
+	} )();
 	/*}}}*/
 }
 /*}}}*/

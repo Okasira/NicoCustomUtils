@@ -68,11 +68,11 @@ function RemodelIllustHeaderStyle()
 	/* スタイル定義 {{{*/
 	var RemodelStyle = ''		+
 	// タイトル
-	'.title_block'					+
-	'{'								+
-	'	margin-left:	23px;'		+
-	'	cursor:			pointer;'	+
-	'}'								+
+	'.title_block'									+
+	'{'												+
+	'	margin:			4px 0px 4px 28px;'			+
+	'	cursor:			pointer;'					+
+	'}'												+
 	'.title_block::before'							+
 	'{'												+
 	'	display:			inline-block;'			+
@@ -86,21 +86,55 @@ function RemodelIllustHeaderStyle()
 	'	text-decoration:	none;'					+
 	'	text-shadow:		4px 4px 4px silver;'	+
 	'	transform:			scale( 1.4, 1 );'		+
-	'	content:			"▲";'					+
-	'}'												+
-	'.title_block.close::before'					+
-	'{'												+
 	'	content:			"▼";'					+
 	'}'												+
-	// 説明
-	'.title_block+.illust_user_exp'					+
+	// トグル動作
+	'.title_block.open::before'						+
+	'{'												+
+	'	content:			"▲";'					+
+	'}'												+
+	// 情報
+	'.title_block~.info'							+
+	'{'												+
+	'	display:		inline-block;'				+
+	'	height:			0px;'						+
+	'	margin:			0px:'						+
+	'	padding:		0px;'						+
+	'	padding-top:	0px;'						+
+	'	border:			0px;'						+
+	'	overflow-y:		hidden;'					+
+	'	transition:		0.3s linear 0s;'			+
+	'}'												+
+	'.title_block.open~.info'						+
 	'{'												+
 	'	height:			100%;'						+
-	'	transition:		height 1s linear 0s;'		+
+	'	margin:			2px 0px 0px 0px;'			+
+	'	border-bottom:	1px dashed dimgray;'		+
 	'}'												+
-	'.title_block.close+.illust_user_exp'			+
+	// 説明
+	'.title_block~.illust_user_exp'					+
 	'{'												+
 	'	height:			0px;'						+
+	'	margin:			0px:'						+
+	'	padding:		0px;'						+
+	'	overflow-y:		hidden;'					+
+	'	transition:		0.3s linear 0s;'			+
+	'}'												+
+	'.title_block.open~.illust_user_exp'			+
+	'{'												+
+	'	height:			100%;'						+
+	'	margin:			4px 0px 0px 0px;'			+
+	'	padding:		0px;'						+
+	'}'												+
+	// 投稿者
+	'.title_block~.illust_watch_list_box'			+
+	'{'												+
+	'	height:			0px;'						+
+	'	transition:		0.3s linear 0s;'			+
+	'}'												+
+	'.title_block.open~.illust_watch_list_box'		+
+	'{'												+
+	'	height:			100%;'						+
 	'}'												+
 	'';
 	/*}}}*/
