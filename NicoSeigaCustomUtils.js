@@ -555,7 +555,6 @@ function RemodelAddClip()
 		/* ラジオボックスリスト枠を生成 {{{*/
 		var RadioBoxListFrame			= RemodelFrag.appendChild( new CreEle( 'div' ) );
 		RadioBoxListFrame.id			= 'RadioBoxListFrame';
-		RadioBoxListFrame.style.left	= ( ( new ByID( 'illust_main' ) ).offsetWidth + 4 ) + 'px';
 		/*}}}*/
 
 		/* ラジオボックスリストアウターを生成 {{{*/
@@ -575,8 +574,39 @@ function RemodelAddClip()
 		RadioBoxClipButton.id		= 'RadioBoxClipButton';
 		/*}}}*/
 
+		/* クリップスライドボタンを生成 {{{*/
+		var RadioBoxSlideButton		= RadioBoxClipButtonOuter.appendChild( new CreEle( 'div' ) );
+		RadioBoxSlideButton.id		= 'RadioBoxSlideButton';
+		RadioBoxSlideButton.appendChild( new CreEle( 'span' ) );
+		RadioBoxSlideButton.lastChild.id		= 'SlideText';
+		RadioBoxSlideButton.lastChild.className	= '';
+		RadioBoxSlideButton.lastChild.appendChild( new CreTNode( 'ｺﾒﾝﾄ表示≫' ) );
+		/*}}}*/
+
 		/* まとめて追加 */
 		( new ByID( 'illust_main' ) ).appendChild( RemodelFrag );
+		/*}}}*/
+
+		/* クリップスライドイベント追加 {{{*/
+		RadioBoxSlideButton.addEventListener(
+			'click',
+			function()
+			{
+				/* クリップ枠をスライド */
+				new ByID( 'RadioBoxListFrame' ).classList.toggle( 'open' );
+				var SlideText = new ByID( 'SlideText' );
+				SlideText.classList.toggle( 'open' );
+
+				/* ボタンのテキストを書き換え */
+				if( SlideText.classList.contains( 'open' ) )
+				{
+					SlideText.textContent	= '≪ｺﾒﾝﾄ非表示';
+				} else {
+					SlideText.textContent	= 'ｺﾒﾝﾄ表示≫';
+				}
+			},
+			'false'
+			);
 		/*}}}*/
 
 		/* クリップ追加ボタンイベント {{{
