@@ -161,12 +161,14 @@ function RemodelIllustAddClipStyle()
 	'}'							+
 
 	// クリップ時のメッセージ枠移動
+/*
 	'#clip_message'								+
 	'{'											+
 	'	left:			0px		!important;'	+
 	'	right:			auto	!important;'	+
 	'	margin-left:	354px	!important;'	+
 	'}'											+
+*/
 
 	// 元のクリップボタンを非表示
 	'#add_clip'									+
