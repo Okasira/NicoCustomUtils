@@ -1,6 +1,6 @@
 /* vim:set foldmethod=marker: */
 // ==UserScript==
-// @name Futaba Original Image Preloader
+// @name NicoNicoSeiga Custom Style
 // @namespace 
 // @description ニコニコ静画のスタイルカスタマイズ。
 // @include http://seiga.nicovideo.jp*
@@ -16,23 +16,23 @@
 /* 汎用関数                                                                                       */
 /**************************************************************************************************/
 /* getElement系, queryselector系のラッパ {{{*/
-function ByID(){ return( document.getElementById( arguments[0] ) ); }
+function byID(){ return( document.getElementById( arguments[0] ) ); }
 
-function ByName()
+function byName()
 {
 	var par		= ( arguments.length === 1 ) ? document : arguments[0];
 	var name	= ( arguments.length === 1 ) ? arguments[0] : arguments[1];
 	return( par.getElementsByName( name ) );
 }
 
-function ByTag()
+function byTag()
 {
 	var par =	( arguments.length === 1 ) ? document : arguments[0];
 	var tag	=	( arguments.length === 1 ) ? arguments[0] : arguments[1];
 	return( par.getElementsByTagName( tag ) );
 }
 
-function ByClass()
+function byClass()
 {
 	var par		=	( arguments.length === 1 ) ? document : arguments[0];
 	var cname	=	( arguments.length === 1 ) ? arguments[0] : arguments[1];
@@ -53,9 +53,9 @@ function QSelA()
 	return( par.querySelectorAll( sel ) );
 }
 
-function CreEle( tag ){	return( document.createElement( tag ) );	}
-function CreEve( ev  ){	return( document.createEvent( ev )	);		}
-function CreTNode(  txt ){	return( document.createTextNode( txt )	);	}
+function creEle( tag ){	return( document.createElement( tag ) );	}
+function creEve( ev  ){	return( document.createEvent( ev )	);		}
+function creTNode(  txt ){	return( document.createTextNode( txt )	);	}
 /*}}}*/
 
 /**************************************************************************************************/
@@ -140,11 +140,11 @@ function RemodelIllustHeaderStyle()
 	/*}}}*/
 
 	/* スタイル追加 {{{*/
-	var	StyleElement		= new CreEle( 'style' );
+	var	StyleElement		= creEle( 'style' );
 	StyleElement.type		= 'text/css';
 	StyleElement.id			= 'RemodelIllustHeaderStyle';
-	StyleElement.appendChild( new CreTNode( RemodelStyle ) );
-	( new ByTag( 'head' ) )[0].appendChild( StyleElement );
+	StyleElement.appendChild( creTNode( RemodelStyle ) );
+	byTag( 'head' )[0].appendChild( StyleElement );
 	/*}}}*/
 }
 /*}}}*/
@@ -369,11 +369,11 @@ function RemodelIllustAddClipStyle()
 	/*}}}*/
 
 	/* スタイル追加 {{{*/
-	var	StyleElement		= new CreEle( 'style' );
+	var	StyleElement		= creEle( 'style' );
 	StyleElement.type		= 'text/css';
 	StyleElement.id			= 'RemodelIllustAddClipStyle';
-	StyleElement.appendChild( new CreTNode( RemodelStyle ) );
-	( new ByTag( 'head' ) )[0].appendChild( StyleElement );
+	StyleElement.appendChild( creTNode( RemodelStyle ) );
+	byTag( 'head' )[0].appendChild( StyleElement );
 	/*}}}*/
 }
 /*}}}*/
@@ -587,11 +587,11 @@ function RemodelClipMenuStyle()
 	/*}}}*/
 
 	/* スタイル追加 {{{*/
-	var	StyleElement		=  new CreEle( 'style' );
+	var	StyleElement		=  creEle( 'style' );
 	StyleElement.type		= 'text/css';
 	StyleElement.id			= 'RemodelClipMenuStyle';
-	StyleElement.appendChild( new CreTNode( RemodelStyle ) );
-	( new ByTag( 'head' ) )[0].appendChild( StyleElement );
+	StyleElement.appendChild( creTNode( RemodelStyle ) );
+	byTag( 'head' )[0].appendChild( StyleElement );
 	/*}}}*/
 }
 /*}}}*/
@@ -618,11 +618,11 @@ function RemodelClipHeaderStyle()
 	/*}}}*/
 
 	/* スタイル追加 {{{*/
-	var	StyleElement		=  new CreEle( 'style' );
+	var	StyleElement		=  creEle( 'style' );
 	StyleElement.type		= 'text/css';
 	StyleElement.id			= 'RemodelClipMenuStyle';
-	StyleElement.appendChild( new CreTNode( RemodelStyle ) );
-	( new ByTag( 'head' ) )[0].appendChild( StyleElement );
+	StyleElement.appendChild( creTNode( RemodelStyle ) );
+	byTag( 'head' )[0].appendChild( StyleElement );
 	/*}}}*/
 }
 /*}}}*/
@@ -671,11 +671,11 @@ function RemodelPersonalizeStyle()
 	/*}}}*/
 
 	/* スタイル追加 {{{*/
-	var	StyleElement		= new CreEle( 'style' );
+	var	StyleElement		= creEle( 'style' );
 	StyleElement.type		= 'text/css';
 	StyleElement.id			= 'RemodelPersonalizeStyle';
-	StyleElement.appendChild( new CreTNode( RemodelStyle ) );
-	( new ByTag( 'head' ) )[0].appendChild( StyleElement );
+	StyleElement.appendChild( creTNode( RemodelStyle ) );
+	byTag( 'head' )[0].appendChild( StyleElement );
 	/*}}}*/
 }
 /*}}}*/
@@ -692,21 +692,21 @@ window.opera.addEventListener(
 		if( /\/seiga\/im\d+/.test( window.location.href ) )
 		{
 			/* クリップ操作パネルのスタイル */
-			new RemodelIllustAddClipStyle();
+			RemodelIllustAddClipStyle();
 			/* ヘッダの改造 */
-			new RemodelIllustHeaderStyle();
+			RemodelIllustHeaderStyle();
 		}
 		/* クリップのハンドラ */
 		else if( /\/my\/clip/.test( window.location.href ) )
 		{
-			new RemodelClipMenuStyle();
+			RemodelClipMenuStyle();
 
-			new RemodelClipHeaderStyle();
+			RemodelClipHeaderStyle();
 		}
 		/* イラスト定点観測のハンドラ */
 		else if( /\/my\/personalize/.test( window.location.href ) )
 		{
-			new RemodelPersonalizeStyle();
+			RemodelPersonalizeStyle();
 		}
 	},
 	false

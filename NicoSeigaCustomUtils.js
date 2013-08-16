@@ -1,6 +1,6 @@
 /* vim:set foldmethod=marker: */
 // ==UserScript==
-// @name Futaba Original Image Preloader
+// @name NicoNicoSeiga Custom Utils
 // @namespace 
 // @description ニコニコのカスタマイズ。
 // @include http://seiga.nicovideo.jp*
@@ -37,7 +37,7 @@ var classifyRule	=
 		'神霊廟':			[ '幽谷', '芳香', '青娥', '屠自古', '布都', '神子', 'マミゾウ' ],
 		'非想天則':			[ '永江', '天子', '萃香' ],
 		'星蓮船':			[ 'ナズ', '小傘', '一輪', '雲山', '村紗', '寅丸', '聖', 'ぬえ' ],
-		'地霊殿':			[ 'キスメ', '黒谷', 'パルスィ', '勇儀', '古明地', '燐', '霊烏路(?:|空)', 'お空', 'さとり', 'こいし' ],
+		'地霊殿':			[ 'キスメ', '黒谷', 'パルスィ', '勇儀', '古明地', '燐', '霊烏路', '(?:|お)空', 'さとり', 'こいし' ],
 		'風神録':			[ '静葉', '穣子', '鍵山雛', 'にとり', '秋姉妹', 'ニトアリ' ],
 		'花映塚':			[ '幽香', 'メディスン', '(?:|小野塚)小町', '(?:|四季)映姫' ],
 		'永夜抄':			[ 'リグル', 'ミスティア', '慧音', 'てゐ', '鈴仙', '永琳', '輝夜', '妹紅', 'うどんげ', '八意', '白沢' ],
@@ -70,46 +70,46 @@ var classifyRule	=
 /* 汎用関数                                                                                       */
 /**************************************************************************************************/
 /* getElement系, queryselector系のラッパ {{{*/
-function ByID(){ return( document.getElementById( arguments[0] ) ); }
+function byID(){ return( document.getElementById( arguments[0] ) ); }
 
-function ByName()
+function byName()
 {
 	var par		= ( arguments.length === 1 ) ? document : arguments[0];
 	var name	= ( arguments.length === 1 ) ? arguments[0] : arguments[1];
 	return( par.getElementsByName( name ) );
 }
 
-function ByTag()
+function byTag()
 {
 	var par =	( arguments.length === 1 ) ? document : arguments[0];
 	var tag	=	( arguments.length === 1 ) ? arguments[0] : arguments[1];
 	return( par.getElementsByTagName( tag ) );
 }
 
-function ByClass()
+function byClass()
 {
 	var par		=	( arguments.length === 1 ) ? document : arguments[0];
 	var cname	=	( arguments.length === 1 ) ? arguments[0] : arguments[1];
 	return( par.getElementsByClassName( cname ) );
 }
 
-function QSel()
+function qSel()
 {
 	var par	=	( arguments.length === 1 ) ? document : arguments[0];
 	var sel	=	( arguments.length === 1 ) ? arguments[0] : arguments[1];
 	return( par.querySelector( sel ) );
 }
 
-function QSelA()
+function qSelA()
 {
 	var par	=	( arguments.length === 1 ) ? document : arguments[0];
 	var sel	=	( arguments.length === 1 ) ? arguments[0] : arguments[1];
 	return( par.querySelectorAll( sel ) );
 }
 
-function CreEle( tag ){	return( document.createElement( tag ) );	}
-function CreEve( ev  ){	return( document.createEvent( ev )	);		}
-function CreTNode(  txt ){	return( document.createTextNode( txt )	);	}
+function creEle( tag ){	return( document.createElement( tag ) );	}
+function creEve( ev  ){	return( document.createEvent( ev )	);		}
+function creTNode(  txt ){	return( document.createTextNode( txt )	);	}
 /*}}}*/
 
 /**************************************************************************************************/
@@ -119,16 +119,16 @@ function CreTNode(  txt ){	return( document.createTextNode( txt )	);	}
 /**************************************************************************************************/
 /* ニコニコ静画-クリップページ                                                                    */
 /**************************************************************************************************/
-/* RemodelClipMenu() : クリップメニューの改造 {{{*/
-function RemodelClipMenu()
+/* remodelClipMenu() : クリップメニューの改造 {{{*/
+function remodelClipMenu()
 {
 	/* クリップの上位エレメントに公開クラスを付ける {{{*/
 	( function()
 	{
-		var clipList = new QSelA( '.my_menu_clipgroup_list>ul>.clip_item' );
+		var clipList = qSelA( '.my_menu_clipgroup_list>ul>.clip_item' );
 		for( var count = 0, len = clipList.length; count < len; count++ )
 		{
-			var privateClip = new ByClass( clipList[count], 'clip_item_private' );
+			var privateClip = byClass( clipList[count], 'clip_item_private' );
 			if( privateClip.length === 0 )
 			{
 				clipList[count].classList.add( 'public' );
@@ -141,27 +141,27 @@ function RemodelClipMenu()
 	( function()
 	{
 		/* 新規メニューを生成 {{{*/
-		var newMenuList = {};
+		var newMenuList = new Object;
 
 		/* メニュー生成関数 {{{*/
-		function CreateNewMenu( title )
+		function createNewMenu( title )
 		{
 			var newMenu = document.createDocumentFragment();
 
 			/* メニュー枠追加 */
-			var newElement				= new CreEle( 'div' );
+			var newElement				= creEle( 'div' );
 			newElement.className		= 'NewMenuFrame';
 			newElement.dataset.menuName = title;
 			newMenu.appendChild( newElement );
 
 			/* メニュータイトル追加 */
-			newElement				= new CreEle( 'span' );
+			newElement				= creEle( 'span' );
 			newElement.className	= 'NewMenuTitle close';
 			newElement.appendChild( document.createTextNode( title ) );
 			newMenu.firstChild.appendChild( newElement );
 	
 			/* メニューリスト追加 */
-			newElement				= new CreEle( 'ul' );
+			newElement				= creEle( 'ul' );
 			newElement.className	= 'NewMenuList';
 			newMenu.firstChild.appendChild( newElement );
 
@@ -177,37 +177,37 @@ function RemodelClipMenu()
 		/*}}}*/
 
 		/* 未分類メニュー生成 */
-		newMenuList[noKindStr]	= new CreateNewMenu( noKindStr );
+		newMenuList[noKindStr]	= createNewMenu( noKindStr );
 
 		/* クリップリスト全体を走査 {{{*/
 		( function()
 		{
-			var clipRoot = ( new ByClass( 'my_menu_clipgroup_list' ))[0];
-			var clipList = new ByClass( clipRoot, 'clip_item' );
+			var clipRoot = byClass( 'my_menu_clipgroup_list' )[0];
+			var clipList = byClass( clipRoot, 'clip_item' );
 			for( var count =  clipList.length - 1; count >= 0; count-- )
 			{
 				var kindText = noKindStr;
-				var clipText = ( new ByClass( clipList[count], 'clip_item_title' ) )[0].textContent;
+				var clipText = byClass( clipList[count], 'clip_item_title' )[0].textContent;
 				var clipName = clipText;
 
 				/* セパレータ有りかチェック */
-				var SepCheck = new RegExp( kindSep );
-				if( SepCheck.test( clipText ) )
+				var sepCheck = new RegExp( kindSep );
+				if( sepCheck.test( clipText ) )
 				{
 					/* カテゴリメニュー未作成の場合は新規作成 */
-					var SplitText = clipText.split( kindSep, 2 );
-					kindText = SplitText[0];
-					clipName = SplitText[1];
+					var splitText = clipText.split( kindSep, 2 );
+					kindText = splitText[0];
+					clipName = splitText[1];
 					if( !( kindText in newMenuList ) )
 					{
-						newMenuList[kindText] = new CreateNewMenu( kindText );
+						newMenuList[kindText] = createNewMenu( kindText );
 					}
 				}
 
 				/* 新メニューに移し替え */
-				var	newMenu = ( new ByClass( newMenuList[kindText].firstChild, 'NewMenuList' ) )[0];
+				var	newMenu = byClass( newMenuList[kindText].firstChild, 'NewMenuList' )[0];
 				newMenu.insertBefore( clipList[count], newMenu.firstChild );
-				( new ByClass( newMenu, 'clip_item_title' ) )[0].textContent = clipName;
+				byClass( newMenu, 'clip_item_title' )[0].textContent = clipName;
 			}
 		} )();
 		/*}}}*/
@@ -216,10 +216,10 @@ function RemodelClipMenu()
 		/* 新メニューに付け替え {{{*/
 		( function()
 		{
-			var menuBase = ( new ByClass( 'my_menu_clipgroup_list' ) )[0];
+			var menuBase = byClass( 'my_menu_clipgroup_list' )[0];
 
 			/* 旧メニューを削除 */
-			menuBase.removeChild( ( new ByTag( menuBase, 'ul' ) )[0] );
+			menuBase.removeChild( byTag( menuBase, 'ul' )[0] );
 
 			/* 未分類が新規作成の前に来るように先頭に追加する */
 			menuBase.insertBefore( newMenuList[noKindStr], menuBase.firstChild );
@@ -245,7 +245,7 @@ function RemodelClipMenu()
 		/*}}}*/
 
 		/* 選択しているクリップのメニューは開いておく {{{*/
-		var clipItems = ( new ByClass( ( new ByClass( 'my_menu_clipgroup_list' ) )[0], 'clip_item' ) );
+		var clipItems = byClass( byClass( 'my_menu_clipgroup_list' )[0], 'clip_item' );
 		for( var count = 0, len = clipItems.length; count < len; count++ )
 		{
 			if( clipItems[count].classList.contains( 'clip_item_selected' ) )
@@ -261,40 +261,37 @@ function RemodelClipMenu()
 	( function()
 	{
 		/* ポップアップを生成 {{{*/
-		var CreatePopup	= ( function()
+		var CreatePopup	= function()
 		{
-			var	cloneBase = new CreEle( 'div' );
+			this.cloneBase = creEle( 'div' );
+		};
 
-			return(
-			{
-				create:	function( popText )
-				{
-					var popupDiv	= cloneBase.cloneNode( true );
-					popupDiv.className	= 'IllustCountPop';
-					popupDiv.appendChild( new CreTNode( popText ) );
-					return( popupDiv );
-				}
-			} );
-
-		} )();
+		CreatePopup.prototype.create	= function( popText )
+		{
+			var popupDiv	= this.cloneBase.cloneNode( true );
+			popupDiv.className	= 'IllustCountPop';
+			popupDiv.appendChild( creTNode( popText ) );
+			return( popupDiv );
+		};
+		var createPopup	= new CreatePopup();
 		/*}}}*/
 
 		/* 種別分回す {{{*/
-		var ClipMenuList = new ByClass( 'NewMenuList' );
-		for( var MenuCount = 0, MenuLen = ClipMenuList.length; MenuCount < MenuLen; MenuCount++ )
+		var clipMenuList = byClass( 'NewMenuList' );
+		for( var menuCount = 0, menuLen = clipMenuList.length; menuCount < menuLen; menuCount++ )
 		{
 			/* クリップ分回す {{{*/
-			var ClipItemList = new ByClass( ClipMenuList[MenuCount], 'clip_item' );
-			for( var ClipCount = 0, ClipLen = ClipItemList.length; ClipCount < ClipLen; ClipCount++ )
+			var clipItemList = byClass( clipMenuList[menuCount], 'clip_item' );
+			for( var clipCount = 0, clipLen = clipItemList.length; clipCount < clipLen; clipCount++ )
 			{
-				var ItemAnchor	= ( new ByTag( ClipItemList[ClipCount], 'a' ) )[0];
+				var ItemAnchor	= byTag( clipItemList[clipCount], 'a' )[0];
 				var ItemTile	= ItemAnchor.title;
 				var ViewText	= /^.+:(\d+)枚の画像$/.exec( ItemTile );
-				ClipItemList[ClipCount].appendChild( CreatePopup.create( ViewText[1] + '/ 500枚' ) );
+				clipItemList[clipCount].appendChild( createPopup.create( ViewText[1] + '/ 500枚' ) );
 
 				if( Number( ViewText[1], 10 ) >= clipAlartNum )
 				{
-					ClipItemList[ClipCount].className += 'ClipAlert';
+					clipItemList[clipCount].className += 'ClipAlert';
 				}
 
 				ItemAnchor.title	= '';
@@ -308,15 +305,15 @@ function RemodelClipMenu()
 }
 /*}}}*/
 
-/* RemodelClipPage() : クリップページの改造 {{{*/
-function RemodelClipPage()
+/* remodelClipPage() : クリップページの改造 {{{*/
+function remodelClipPage()
 {
 	/* 削除されたイラスト全チェックボタン追加 {{{*/
 	( function()
 	{
-		var DeleteIllustCheck = new CreEle( 'span' );
-		DeleteIllustCheck.appendChild( new CreTNode( '削除されたイラストを全て' ) );
-		var CheckButton = new CreEle( 'input' );
+		var DeleteIllustCheck = creEle( 'span' );
+		DeleteIllustCheck.appendChild( creTNode( '削除されたイラストを全て' ) );
+		var CheckButton = creEle( 'input' );
 		CheckButton.id			= 'deleteIllustSelectButton';
 		CheckButton.className	= 'delete';
 		CheckButton.type		= 'button';
@@ -325,14 +322,14 @@ function RemodelClipPage()
 			'click',
 			function()
 			{
-				var IllustList = new ByClass( 'clip_thumb' );
+				var IllustList = byClass( 'clip_thumb' );
 				for( var count = 0, len = IllustList.length; count < len; count++ )
 				{
 					var Illust = IllustList[count];
-					if( /deleted\.png$/.test( ( new ByTag( Illust, 'img') )[0].src )		||
-						/pic_no_disp\.gif$/.test( ( new ByTag( Illust, 'img') )[0].src )	)
+					if( /deleted\.png$/.test( byTag( Illust, 'img' ) [0].src )		||
+						/pic_no_disp\.gif$/.test( byTag( Illust, 'img' )[0].src )	)
 					{
-						( new ByClass( Illust, 'image_check' ) )[0].checked = true;
+						byClass( Illust, 'image_check' )[0].checked = true;
 					}
 				}
 			},
@@ -340,19 +337,19 @@ function RemodelClipPage()
 			);
 
 		DeleteIllustCheck.appendChild( CheckButton );
-		DeleteIllustCheck.appendChild( new CreTNode( 'する' ) );
-		( new ByID( 'clip_area' ) ).insertBefore( DeleteIllustCheck, ( new ByClass( 'mode_button_list' ) )[0] );
+		DeleteIllustCheck.appendChild( creTNode( 'する' ) );
+		byID( 'clip_area' ).insertBefore( DeleteIllustCheck, byClass( 'mode_button_list'  )[0] );
 	} )();
 	/*}}}*/
 
 	/* ページタイトルからページ選択までを一つのdviに納める {{{*/
 	( function()
 	{
-		var clipArea	= new ByID( 'clip_area' );
-		var headerDiv	= clipArea.appendChild( new CreEle( 'div' ) );
+		var clipArea	= byID( 'clip_area' );
+		var headerDiv	= clipArea.appendChild( creEle( 'div' ) );
 		headerDiv.id	= 'HeaderDiv';
-		var searchBase	= new ByClass( clipArea, 'list_body' )[0];
-		while( searchBase.previousElementSibling != null )
+		var searchBase	= byClass( clipArea, 'list_body' )[0];
+		while( searchBase.previousElementSibling !== null )
 		{
 			headerDiv.insertBefore( searchBase.previousSibling, headerDiv.firstChild );
 		}
@@ -363,32 +360,33 @@ function RemodelClipPage()
 	/* クリップページのイラスト機能拡張 {{{*/
 	( function()
 	{
-		/* イラストページ画像のプリフェッチクロージャ {{{*/
-		var AddThumbPrefetch = ( function()
-		{
-			var	cloneBase	= new CreEle( 'img' );
-
-			return(
-			{
-				setPrefetch: function( center_img_inner )
-				{
-					var IllustThumb				= cloneBase.cloneNode( true );
-					var IllustSmall				= ( new ByTag( center_img_inner, 'img' ) )[0].src;
-					var IllustMedium			= /^(http:\/\/lohas\.nicoseiga\.jp\/thumb\/\d+)q\?/.exec( IllustSmall );
-					if( IllustMedium !== null )
-					{
-						IllustThumb.src				= IllustMedium[1] + 'i?';
-						IllustThumb.style.display	= 'none';
-						IllustThumb.style.position	= 'absolute';
-						center_img_inner.appendChild( IllustThumb );
-					}
-				}
-			} );
-		} )();
-		/*}}}*/
+//		/* イラストページ画像のプリフェッチクロージャ {{{*/
+//		/* 端末が重いとプリフェッチも重くなりそうなのでコメントアウト */
+//		var AddThumbPrefetch = ( function()
+//		{
+//			this.cloneBase	= creEle( 'img' );
+//
+//			return(
+//			{
+//				setPrefetch: function( center_img_inner )
+//				{
+//					var IllustThumb				= this.cloneBase.cloneNode( true );
+//					var IllustSmall				= byTag( center_img_inner, 'img' )[0].src;
+//					var IllustMedium			= /^(http:\/\/lohas\.nicoseiga\.jp\/thumb\/\d+)q\?/.exec( IllustSmall );
+//					if( IllustMedium !== null )
+//					{
+//						IllustThumb.src				= IllustMedium[1] + 'i?';
+//						IllustThumb.style.display	= 'none';
+//						IllustThumb.style.position	= 'absolute';
+//						center_img_inner.appendChild( IllustThumb );
+//					}
+//				}
+//			} );
+//		} )();
+//		/*}}}*/
 
 		/* イラストにクリックハンドラを追加 {{{*/
-		function AddClickHandler( illustList )
+		function addClickHandler( illustList )
 		{
 			/* ハンドラ本体 */
 			function handler( e )
@@ -397,13 +395,13 @@ function RemodelClipPage()
 				if( ( e.target.className === 'clip_thumb' ) ||
 					( e.target.className === 'illust_title' ) )
 				{
-					var checkbox = ( new ByClass( e.target, 'image_check' ) )[0];
+					var checkbox = byClass( e.target, 'image_check' )[0];
 					checkbox.checked = !checkbox.checked;
 				}
 			}
 
 			/* イラストリストから該当する物を抽出 */
-			var clip_thumbs = new ByClass( illustList, 'clip_thumb' );
+			var clip_thumbs = byClass( illustList, 'clip_thumb' );
 
 			/* クリップリスト内のイラスト分回す */
 			for( var count = 0, len = clip_thumbs.length, illust; count < len; count++ )
@@ -419,28 +417,29 @@ function RemodelClipPage()
 		}
 		/*}}}*/
 
-		/* イメージプリフェッチを追加 {{{ */
-		function AddPrefetchImage( illustList )
-		{
-			/* イラストリストから該当する物を抽出 */
-			var clip_thumbs = new ByClass( illustList, 'clip_thumb' );
-
-			/* クリップリスト内のイラスト分回す */
-			for( var count = 0, len = clip_thumbs.length, illust, imgInner; count < len; count++ )
-			{
-				illust		= clip_thumbs[count];
-				imgInner	= ( new ByClass( illust, 'center_img_inner' ) )[0];
-				AddThumbPrefetch.setPrefetch( imgInner );
-			}
-		}
-		/*}}}*/
+//		/* イメージプリフェッチを追加 {{{ */
+//		/* 端末が重いとプリフェッチも重くなりそうなのでコメントアウト */
+//		function addPrefetchImage( illustList )
+//		{
+//			/* イラストリストから該当する物を抽出 */
+//			var clip_thumbs = byClass( illustList, 'clip_thumb' );
+//
+//			/* クリップリスト内のイラスト分回す */
+//			for( var count = 0, len = clip_thumbs.length, illust, imgInner; count < len; count++ )
+//			{
+//				illust		= clip_thumbs[count];
+//				imgInner	= byClass( illust, 'center_img_inner' )[0];
+//				AddThumbPrefetch.setPrefetch( imgInner );
+//			}
+//		}
+//		/*}}}*/
 
 		/* 表示されている画像の元画像リンクリストを生成 {{{*/
-		function AddIllustAnchorCreate( illustList )
+		function addIllustAnchorCreate( illustList )
 		{
 			var documentFrag		= document.createDocumentFragment();
-			var	cloneBase			= new CreEle( 'a' );
-			var clipList			= new ByClass( illustList, 'clip_thumb' );
+			var cloneBase			= creEle( 'a' );
+			var clipList			= byClass( illustList, 'clip_thumb' );
 			var regExp				= new RegExp( 'clip_image_(\\d+)' );
 			for( var count = 0, len = clipList.length, illustID, anchorElement; count < len; count++ )
 			{
@@ -449,32 +448,33 @@ function RemodelClipPage()
 				anchorElement.href	= 'http://seiga.nicovideo.jp/image/source?id=' + illustID[1];
 				documentFrag.appendChild( anchorElement );
 			}
-			( new ByID( 'IllustCollection' ) ).appendChild( documentFrag );
+			byID( 'IllustCollection' ).appendChild( documentFrag );
 		}
 		/*}}}*/
 
 		//--------------------------------------------------------------------------------
 		// ここから実行
 		//--------------------------------------------------------------------------------
-		var	clipArea		= new ByID( 'clip_area' );
-		var	listBody		= ( new ByClass( clipArea, 'list_body' ) )[0];
-		var	clipImageList	= new ByID( 'clip_image_list' );
+		var	clipArea		= byID( 'clip_area' );
+		var	listBody		= byClass( clipArea, 'list_body' )[0];
+		var	clipImageList	= byID( 'clip_image_list' );
 
 		/* イラストにクリックハンドラを追加 {{{*/
-		new AddClickHandler( clipImageList );
+		addClickHandler( clipImageList );
 		/*}}}*/
 
 		/* イラストページ画像のプリフェッチ追加 {{{*/
-		new AddPrefetchImage( clipImageList );
+//		/* 端末が重いとプリフェッチも重くなりそうなのでコメントアウト */
+//		addPrefetchImage( clipImageList );
 		/*}}}*/
 
 		/* リンクリスト表示DIVを生成 {{{*/
-		var illustCollection = new CreEle( 'div' );
+		var illustCollection = creEle( 'div' );
 		illustCollection.id	= 'IllustCollection';
 		illustCollection.style.display	= 'none';
 		illustCollection.style.position	= 'absolute';
-		( new ByTag( 'body' ) )[0].appendChild( illustCollection );
-		new AddIllustAnchorCreate( clipImageList );
+		byTag( 'body' )[0].appendChild( illustCollection );
+		addIllustAnchorCreate( clipImageList );
 		/*}}}*/
 
 		/* AutoPatchWork追加検出 {{{*/
@@ -485,11 +485,12 @@ function RemodelClipPage()
 				if( /autopagerize_page_element/.test( e.target.className ) )
 				{
 					/* 追加された要素にクリックハンドラを追加 */
-					new AddClickHandler( e.target );
+					addClickHandler( e.target );
 					/* 追加された要素にプリフェッチを追加 */
-					new AddPrefetchImage( e.target );
+//					/* 端末が重いとプリフェッチも重くなりそうなのでコメントアウト */
+//					addPrefetchImage( e.target );
 					/* 追加された要素から元画像のリンクを抽出 */
-					new AddIllustAnchorCreate( e.target );
+					addIllustAnchorCreate( e.target );
 				}
 			},
 			false
@@ -504,13 +505,13 @@ function RemodelClipPage()
 /**************************************************************************************************/
 /* ニコニコ静画-イラストページ                                                                    */
 /**************************************************************************************************/
-/* RemodelIllustHeader() : イラストページのヘッダを改造 {{{*/
-function RemodelIllustHeader()
+/* remodelIllustHeader() : イラストページのヘッダを改造 {{{*/
+function remodelIllustHeader()
 {
 	/* タイトルとinfoを上下入れ替え調整 {{{*/
 	( function()
 	{
-		var titleBlock	= ( new ByClass( 'title_block' ) )[0];
+		var titleBlock	= byClass( 'title_block' )[0];
 		var exp_header	= titleBlock.parentNode;
 		exp_header.insertBefore( titleBlock, exp_header.firstChild );
 	} )();
@@ -519,12 +520,12 @@ function RemodelIllustHeader()
 	/* タイトルクリックでイラスト説明文を開閉 {{{*/
 	( function()
 	{
-		var title = ( new ByClass( 'title_block' ) )[0];
+		var title = byClass( 'title_block' )[0];
 		title.addEventListener(
 			'click',
 			function()
 			{
-				var titleBlock	= ( new ByClass( 'title_block' ) )[0];
+				var titleBlock	= byClass( 'title_block' )[0];
 				titleBlock.classList.toggle( 'open' );
 			},
 			false
@@ -534,67 +535,67 @@ function RemodelIllustHeader()
 }
 /*}}}*/
 
-/* RemodelAddClip() : 静画画像のクリップ追加を改造  {{{*/
-function RemodelAddClip()
+/* remodelAddClip() : 静画画像のクリップ追加を改造  {{{*/
+function remodelAddClip()
 {
 	/* クリックイベント発行関数{{{*/
-	function SendClick( SendElement )
+	function sendClick( SendElement )
 	{
-		var ClickEvent = new CreEve( 'MouseEvents' );
+		var ClickEvent = creEve( 'MouseEvents' );
 		ClickEvent.initEvent( 'click', false, true );
 		SendElement.dispatchEvent( ClickEvent );
 	}
 	/*}}}*/
 
 	/* ラジオボックスリスト枠 {{{*/
-	var RemodelFrame  = ( function()
+	var remodelFrame  = ( function()
 	{
 		/* 枠生成 {{{*/
-		var RemodelFrag	= document.createDocumentFragment();
+		var remodelFrag	= document.createDocumentFragment();
 
 		/* ラジオボックスリスト枠を生成 {{{*/
-		var RadioBoxListFrame			= RemodelFrag.appendChild( new CreEle( 'div' ) );
-		RadioBoxListFrame.id			= 'RadioBoxListFrame';
+		var radioBoxListFrame	= remodelFrag.appendChild( creEle( 'div' ) );
+		radioBoxListFrame.id	= 'RadioBoxListFrame';
 		/*}}}*/
 
 		/* ラジオボックスリストアウターを生成 {{{*/
-		var ListFrameOuter	= RadioBoxListFrame.appendChild( new CreEle( 'div' ) );
+		var ListFrameOuter	= radioBoxListFrame.appendChild( creEle( 'div' ) );
 		ListFrameOuter.id	= 'RadioBoxListOuter';
 		/*}}}*/
 
 		/* クリップ追加ボタン */
 		/* クリップ追加ボタン枠を生成 {{{*/
-		var RadioBoxClipButtonOuter = ListFrameOuter.appendChild( new CreEle( 'div' ) );
-		RadioBoxClipButtonOuter.id	= 'RadioBoxClipButtonOuter';
+		var radioBoxClipButtonOuter = ListFrameOuter.appendChild( creEle( 'div' ) );
+		radioBoxClipButtonOuter.id	= 'RadioBoxClipButtonOuter';
 		/*}}}*/
 
 		/* クリップ追加ボタンを生成 {{{*/
-		var RadioBoxClipButton		= RadioBoxClipButtonOuter.appendChild( new CreEle( 'input' ) );
-		RadioBoxClipButton.type		= 'button';
-		RadioBoxClipButton.id		= 'RadioBoxClipButton';
+		var radioBoxClipButton		= radioBoxClipButtonOuter.appendChild( creEle( 'input' ) );
+		radioBoxClipButton.type		= 'button';
+		radioBoxClipButton.id		= 'RadioBoxClipButton';
 		/*}}}*/
 
 		/* クリップスライドボタンを生成 {{{*/
-		var RadioBoxSlideButton		= RadioBoxClipButtonOuter.appendChild( new CreEle( 'div' ) );
-		RadioBoxSlideButton.id		= 'RadioBoxSlideButton';
-		RadioBoxSlideButton.appendChild( new CreEle( 'span' ) );
-		RadioBoxSlideButton.lastChild.id		= 'SlideText';
-		RadioBoxSlideButton.lastChild.className	= '';
-		RadioBoxSlideButton.lastChild.appendChild( new CreTNode( 'ｺﾒﾝﾄ表示≫' ) );
+		var radioBoxSlideButton		= radioBoxClipButtonOuter.appendChild( creEle( 'div' ) );
+		radioBoxSlideButton.id		= 'RadioBoxSlideButton';
+		radioBoxSlideButton.appendChild( creEle( 'span' ));
+		radioBoxSlideButton.lastChild.id		= 'SlideText';
+		radioBoxSlideButton.lastChild.className	= '';
+		radioBoxSlideButton.lastChild.appendChild( creTNode( 'ｺﾒﾝﾄ表示≫' ) );
 		/*}}}*/
 
 		/* まとめて追加 */
-		( new ByID( 'illust_main' ) ).appendChild( RemodelFrag );
+		byID( 'illust_main' ).appendChild( remodelFrag );
 		/*}}}*/
 
 		/* クリップスライドイベント追加 {{{*/
-		RadioBoxSlideButton.addEventListener(
+		radioBoxSlideButton.addEventListener(
 			'click',
 			function()
 			{
 				/* クリップ枠をスライド */
-				new ByID( 'RadioBoxListFrame' ).classList.toggle( 'open' );
-				var SlideText = new ByID( 'SlideText' );
+				byID( 'RadioBoxListFrame' ).classList.toggle( 'open' );
+				var SlideText = byID( 'SlideText' );
 				SlideText.classList.toggle( 'open' );
 
 				/* ボタンのテキストを書き換え */
@@ -612,19 +613,19 @@ function RemodelAddClip()
 		/* クリップ追加ボタンイベント {{{
 		 * ラジオボックスを調べて既存のクリップボタンへイベントを飛ばす
 		 * 追加ボタンはcreateDocumentFragmentを使っているので後付け */
-		( new ByID( 'RadioBoxClipButton' ) ).addEventListener(
+		byID( 'RadioBoxClipButton' ).addEventListener(
 			'click',
 			function()
 			{
 				/* チェックされているラジオボックス検索 {{{*/
-				var CheckedRadio = ( function()
+				var checkedRadio = ( function()
 				{
-					var ClipRadioList	= ( new QSelA( '#ClipKindsTabPageOuter .ClipRadio' ) );
-					for( var count = 0, len = ClipRadioList.length; count < len; count++ )
+					var clipRadioList	=  qSelA( '#ClipKindsTabPageOuter .ClipRadio' );
+					for( var count = 0, len = clipRadioList.length; count < len; count++ )
 					{
-						if( ClipRadioList[count].checked )
+						if( clipRadioList[count].checked )
 						{
-							return( ClipRadioList[count] );
+							return( clipRadioList[count] );
 						}
 					}
 
@@ -633,20 +634,20 @@ function RemodelAddClip()
 				/*}}}*/
 
 				/* チェックされている場合 {{{*/
-				if( CheckedRadio !== null )
+				if( checkedRadio !== null )
 				{
 					/* オリジナルのプルダウンメニューから同じ値の物を検索 {{{*/
-					var orgItemList	= ( new QSelA( '#clip_list>.clip_item' ) );
-					var RadioId		= CheckedRadio.dataset.radioId;
+					var orgItemList	= qSelA( '#clip_list>.clip_item' );
+					var RadioId		= checkedRadio.dataset.radioId;
 					for( var count = 0, len = orgItemList.length; count < len; count++ )
 					{
 						if( orgItemList[count].value === RadioId )
 						{
 							/* オリジナルのプルダウンメニューを変更 */
-							( new ByID( 'group_id' ) ).selectedIndex = orgItemList[count].index;
+							byID( 'group_id' ).selectedIndex = orgItemList[count].index;
 		
 							/* オリジナルクリップボタンのイベント発行 */
-							new SendClick( new ByID( 'clip_add_button' ) );
+							sendClick( byID( 'clip_add_button' ) );
 
 							return;
 						}
@@ -659,215 +660,203 @@ function RemodelAddClip()
 			);
 		/*}}}*/
 
-		return( new ByID( 'RadioBoxListOuter' ) );
+		return( byID( 'RadioBoxListOuter' ) );
 	} )();
 	/*}}}*/
 
 	/* タブ枠＆ページ枠生成 {{{*/
 	/* タブ表示枠生成 {{{*/
-	var ClipKindsTabOuter	= new CreEle( 'div' );
-	ClipKindsTabOuter.id	= 'ClipKindsTabOuter';
-	RemodelFrame.appendChild( ClipKindsTabOuter );
+	var clipKindsTabOuter	= creEle( 'div' );
+	clipKindsTabOuter.id	= 'ClipKindsTabOuter';
+	remodelFrame.appendChild( clipKindsTabOuter );
 	/*}}}*/
 
 	/* ページ表示枠生成 {{{*/
-	var ClipKindsTabPageOuter	= new CreEle( 'div' );
-	ClipKindsTabPageOuter.id	= 'ClipKindsTabPageOuter';
-	RemodelFrame.appendChild( ClipKindsTabPageOuter );
+	var clipKindsTabPageOuter	= creEle( 'div' );
+	clipKindsTabPageOuter.id	= 'ClipKindsTabPageOuter';
+	remodelFrame.appendChild( clipKindsTabPageOuter );
 	/*}}}*/
 
 	/* タブ生成 {{{*/
-	var CreateTab = ( function()
+	var CreateTab = function()
 	{
-		var cloneBase	= new CreEle( 'div' );
-		return(
-		{
-			/* タブ生成 {{{*/
-			create: function( cName, tName, pName, textContent )
+		this.cloneBase	= creEle( 'div' );
+	};
+	CreateTab.prototype.create	= function( cName, tName, pName, textContent )
+	{
+		/* タブ生成 {{{*/
+		var tabElement				= this.cloneBase.cloneNode( true );
+		tabElement.className		= cName;
+		tabElement.dataset.tabName	= tName;
+		tabElement.dataset.pageName	= pName;
+		tabElement.appendChild( creTNode( textContent ) );
+		/*}}}*/
+
+		/* タブクリックイベント {{{*/
+		tabElement.addEventListener(
+			'click',
+			function( e )
 			{
-				/* タブ生成 {{{*/
-				var TabElement				= cloneBase.cloneNode( true );
-				TabElement.className		= cName;
-				TabElement.dataset.tabName	= tName;
-				TabElement.dataset.pageName	= pName;
-				TabElement.appendChild( new CreTNode( textContent ) );
-				/*}}}*/
+				/* 一旦タブを全て非選択 */
+				var tabs = qSelA( '#ClipKindsTabOuter>.ClipKindsTab' );
+				for( var tabCount = 0, len = tabs.length; tabCount < len; tabCount++ )
+				{
+					tabs[tabCount].style.fontWeight	=	'normal';
+				}
+				e.target.style.fontWeight		= 'bold';
 
-				/* タブクリックイベント {{{*/
-				TabElement.addEventListener(
-					'click',
-					function( e )
+				/* ページ表示切り替え */
+				var pages = qSelA( '#ClipKindsTabPageOuter>.ClipKindsTabPage' );
+				for( var pageCount = 0, pageLen = pages.length; pageCount < pageLen; pageCount++ )
+				{
+					if( pages[pageCount].dataset.tabName === e.target.dataset.tabName )
 					{
-						/* 一旦タブを全て非選択 */
-						var Tabs = new QSelA( '#ClipKindsTabOuter>.ClipKindsTab' );
-						for( var TabCount = 0, len = Tabs.length; TabCount < len; TabCount++ )
-						{
-							Tabs[TabCount].style.fontWeight	=	'normal';
-						}
-						e.target.style.fontWeight		= 'bold';
-
-						/* ページ表示切り替え */
-						var Pages = new QSelA( '#ClipKindsTabPageOuter>.ClipKindsTabPage' );
-						for( var PageCount = 0, PageLen = Pages.length; PageCount < PageLen; PageCount++ )
-						{
-							if( Pages[PageCount].dataset.tabName === e.target.dataset.tabName )
-							{
-								Pages[PageCount].style.display	= 'block';
-							} else {
-								Pages[PageCount].style.display	= 'none';
-							}
-						}
-					},
-					false );
-				/*}}}*/
-				return( TabElement );
-			}
-			/*}}}*/
-		} );
-	} )();
+						pages[pageCount].style.display	= 'block';
+					} else {
+						pages[pageCount].style.display	= 'none';
+					}
+				}
+			},
+			false );
+		/*}}}*/
+		return( tabElement );
+	};
+	var createTab = new CreateTab();
 	/*}}}*/
 
 	/* ページ生成 {{{*/
-	var CreatePage = ( function()
+	var CreatePage = function()
 	{
-		var cloneBase	= new CreEle( 'div' );
-
-		return(
-		{
-			create: function( cName, tName, pName )
-			{
-				var PageElement	= cloneBase.cloneNode( true );
-				PageElement.className			= cName;
-				PageElement.dataset.tabName		= tName;
-				PageElement.dataset.pageName	= pName;
-				return( PageElement );
-			}
-		} );
-	} )();
+		this.cloneBase	= creEle( 'div' );
+	};
+	CreatePage.prototype.create = function( cName, tName, pName )
+	{
+		var pageElement	= this.cloneBase.cloneNode( true );
+		pageElement.className			= cName;
+		pageElement.dataset.tabName		= tName;
+		pageElement.dataset.pageName	= pName;
+		return( pageElement );
+	};
+	var createPage = new CreatePage();
 	/*}}}*/
 
-	/*}}}*/
-
-	/* ラジオボタン生成 {{{{*/
-	var CreateRadio = ( function()
+	/* ラジオボタン生成 {{{*/
+	var CreateRadio = function()
 	{
-		var cloneBase = document.createDocumentFragment();
+		this.cloneBase = document.createDocumentFragment();
 
-		cloneBase.appendChild( new CreEle( 'div' ) );
-		cloneBase.firstChild.appendChild( new CreEle( 'input' ) );
-		cloneBase.firstChild.appendChild( new CreEle( 'label' ) );
+		this.cloneBase.appendChild( creEle( 'div' ) );
+		this.cloneBase.firstChild.appendChild( creEle( 'input' ) );
+		this.cloneBase.firstChild.appendChild( creEle( 'label' ) );
+	};
+	CreateRadio.prototype.create	= function( iName, cName, tName, pName, rName, rID, textContent )
+	{
+		var Frag = this.cloneBase.cloneNode( true );
+		var clipRadioOuter	= Frag.firstChild;
+		var	clipRadio		= clipRadioOuter.childNodes[0];
+		var clipRadioLabel	= clipRadioOuter.childNodes[1];
 
-		return(
-		{
-			/* 内容生成 {{{*/
-			create:	function( iName, cName, tName, pName, rName, rID, textContent )
-			{
-				var Frag = cloneBase.cloneNode( true );
-				var ClipRadioOuter	= Frag.firstChild;
-				var	ClipRadio		= ClipRadioOuter.childNodes[0];
-				var ClipRadioLabel	= ClipRadioOuter.childNodes[1];
+		/* ラジオボタンラッパーを生成 */
+		clipRadioOuter.className			= cName + 'Outer';
+		clipRadioOuter.dataset.tabName		= tName;
+		clipRadioOuter.dataset.pageName		= pName;
+		clipRadioOuter.dataset.radioName	= rName;
+		clipRadioOuter.dataset.radioId		= rID;
 
-				/* ラジオボタンラッパーを生成 */
-				ClipRadioOuter.className			= cName + 'Outer';
-				ClipRadioOuter.dataset.tabName		= tName;
-				ClipRadioOuter.dataset.pageName		= pName;
-				ClipRadioOuter.dataset.radioName	= rName;
-				ClipRadioOuter.dataset.radioId		= rID;
+		/* ラジオボタンを生成 */
+		clipRadio.type				= 'radio';
+		clipRadio.id				= iName;
+		clipRadio.className			= cName;
+		clipRadio.name				= cName;
+		clipRadio.dataset.tabName	= tName;
+		clipRadio.dataset.pageName	= pName;
+		clipRadio.dataset.radioName	= rName;
+		clipRadio.dataset.radioId	= rID;
 
-				/* ラジオボタンを生成 */
-				ClipRadio.type				= 'radio';
-				ClipRadio.id				= iName;
-				ClipRadio.className			= cName;
-				ClipRadio.name				= cName;
-				ClipRadio.dataset.tabName	= tName;
-				ClipRadio.dataset.pageName	= pName;
-				ClipRadio.dataset.radioName	= rName;
-				ClipRadio.dataset.radioId	= rID;
+		/* ラジオボタンのラベルを生成 */
+		clipRadioLabel.className			= cName + 'Label';
+		clipRadioLabel.htmlFor				= iName;
+		clipRadioLabel.dataset.tabName		= tName;
+		clipRadioLabel.dataset.pageName		= pName;
+		clipRadioLabel.dataset.radioName	= rName;
+		clipRadioLabel.dataset.radioId		= rID;
+		clipRadioLabel.textContent			= textContent;
 
-				/* ラジオボタンのラベルを生成 */
-				ClipRadioLabel.className			= cName + 'Label';
-				ClipRadioLabel.htmlFor				= iName;
-				ClipRadioLabel.dataset.tabName		= tName;
-				ClipRadioLabel.dataset.pageName		= pName;
-				ClipRadioLabel.dataset.radioName	= rName;
-				ClipRadioLabel.dataset.radioId		= rID;
-				ClipRadioLabel.textContent			= textContent;
-
-				return( Frag );
-			}
-			/*}}}*/
-		} );
-	} )();
+		return( Frag );
+	};
+	var createRadio = new CreateRadio();
 	/*}}}*/
 
 	/* 高さ調整用空ページ {{{*/
-	var BlankPageElement = CreatePage.create( 'ClipKindsTabPage', '', '高さ調整ページ' );
-	BlankPageElement.style.display		= 'block';
-	BlankPageElement.style.position		= 'relative';
-	BlankPageElement.style.height		= '578px';
-	ClipKindsTabPageOuter.appendChild( BlankPageElement );
+	var blankPageElement = createPage.create( 'ClipKindsTabPage', '', '高さ調整ページ' );
+	blankPageElement.style.display		= 'block';
+	blankPageElement.style.position		= 'relative';
+	blankPageElement.style.height		= '578px';
+	clipKindsTabPageOuter.appendChild( blankPageElement );
 	/*}}}*/
 
 	/* タブとページ生成 {{{*/
-	var TabList	= {};
+	var tabList	= new Object;
 
 	/* 未分類タブ＆ページ生成 {{{*/
-	TabList[noKindStr]						= {};
-	TabList[noKindStr][tabElementAttr]		= CreateTab.create( 'ClipKindsTab', noKindStr, noKindStr, noKindStr );
-	TabList[noKindStr][tabPageElementAttr]	= CreatePage.create( 'ClipKindsTabPage', noKindStr, noKindStr );
+	tabList[noKindStr]						= new Object;
+	tabList[noKindStr][tabElementAttr]		= createTab.create( 'ClipKindsTab', noKindStr, noKindStr, noKindStr );
+	tabList[noKindStr][tabPageElementAttr]	= createPage.create( 'ClipKindsTabPage', noKindStr, noKindStr );
 	/*}}}*/
 
 	/* クリップ一覧からタブを生成 {{{*/
-	var SelectedRadio = ( function()
+	var selectedRadio = ( function()
 	{
 		var sRadio = null;
-		var ClipList = new QSelA( '#clip_list>.clip_item' );
-		for( var ClipCount= 0, len = ClipList.length; ClipCount < len; ClipCount++ )
+		var clipList = qSelA( '#clip_list>.clip_item' );
+		for( var clipCount= 0, len = clipList.length; clipCount < len; clipCount++ )
 		{
-			var KindText = '';
+			var kindText = '';
 			/* クリップ名にセパレータがある場合は新規カテゴリ追加 {{{*/
-			var KindCheck = new RegExp( kindSep );
-			if( KindCheck.test( ClipList[ClipCount].textContent ) )
+			var kindCheck = new RegExp( kindSep );
+			if( kindCheck.test( clipList[clipCount].textContent ) )
 			{
 				/* カテゴリ名を取得 */
-				KindText = ClipList[ClipCount].textContent.split( "：", 1 )[0];
+				kindText = clipList[clipCount].textContent.split( "：", 1 )[0];
 
 				/* 新規カテゴリ追加 */
-				if( !( KindText in TabList ) )
+				if( !( kindText in tabList ) )
 				{
 					/* リストに追加 */
-					TabList[KindText]						= {};
-					TabList[KindText][tabElementAttr]		= CreateTab.create( 'ClipKindsTab', KindText, KindText, KindText );
-					TabList[KindText][tabPageElementAttr]	= CreatePage.create( 'ClipKindsTabPage', KindText, KindText );
+					tabList[kindText]	= new Object;
+					tabList[kindText][tabElementAttr]		=
+						createTab.create( 'ClipKindsTab', kindText, kindText, kindText );
+					tabList[kindText][tabPageElementAttr]	=
+						createPage.create( 'ClipKindsTabPage', kindText, kindText );
 				}
 			}
 			/*}}}*/
 
 			/* ラジオボタンのセットを生成 {{{*/
-			var ClipRadio = CreateRadio.create(
-								'ClipRadio_' + ClipList[ClipCount].value,
+			var clipRadio = createRadio.create(
+								'ClipRadio_' + clipList[clipCount].value,
 								'ClipRadio',
-								KindText ? KindText : noKindStr,
-								KindText ? KindText : noKindStr,
-								ClipList[ClipCount].textContent,
-								ClipList[ClipCount].value,
-								KindText	?	ClipList[ClipCount].textContent.split( kindSep, 2 )[1]
-											:	ClipList[ClipCount].textContent.split( kindSep, 2 )[0]
+								kindText ? kindText : noKindStr,
+								kindText ? kindText : noKindStr,
+								clipList[clipCount].textContent,
+								clipList[clipCount].value,
+								kindText	?	clipList[clipCount].textContent.split( kindSep, 2 )[1]
+											:	clipList[clipCount].textContent.split( kindSep, 2 )[0]
 								);
 
 			/* ページへ登録 */
-			if( KindText !== '' )
+			if( kindText !== '' )
 			{
-				TabList[KindText][tabPageElementAttr].appendChild( ClipRadio );
+				tabList[kindText][tabPageElementAttr].appendChild( clipRadio );
 			} else {
-				TabList[noKindStr][tabPageElementAttr].appendChild( ClipRadio );
+				tabList[noKindStr][tabPageElementAttr].appendChild( clipRadio );
 			}
 			/*}}}*/
 
 			/* 選択されているアイテムをチェック */
-			if( ClipList[ClipCount].selected )
+			if( clipList[clipCount].selected )
 			{
-				sRadio = ClipRadio.childNodes[0];
+				sRadio = clipRadio.childNodes[0];
 			}
 		}
 
@@ -876,56 +865,58 @@ function RemodelAddClip()
 	/*}}}*/
 
 	/* タブ表示 {{{*/
-	for( var Tab in TabList )
+	for( var tab in tabList )
 	{
 		/* 未分類以外タブを追加 */
-		if( Tab !== noKindStr )
+		if( tab !== noKindStr )
 		{
-			ClipKindsTabOuter.appendChild( TabList[Tab][tabElementAttr] );
+			clipKindsTabOuter.appendChild( tabList[tab][tabElementAttr] );
 		}
 
 		/* ページを追加 */
-		ClipKindsTabPageOuter.appendChild( TabList[Tab][tabPageElementAttr] );
+		clipKindsTabPageOuter.appendChild( tabList[tab][tabPageElementAttr] );
 	}
 	/* 未分類タブを最後に追加 */
-	ClipKindsTabOuter.appendChild( TabList[noKindStr][tabElementAttr]);
+	clipKindsTabOuter.appendChild( tabList[noKindStr][tabElementAttr]);
 	/*}}}*/
 	/*}}}*/
 
 	/* タグから推定されるクリップを検索 {{{*/
-	var PresumedClip = ( function SearchPresumedClip( CR )
+	var presumedClip = ( function ( ruleList )
 	{
 		/* タグリストを生成 */
-		var TagList = [];
-		var TagAnchor = new QSelA( '#tag_block .tag' );
+		var tagList = new Array;
+		var TagAnchor = qSelA( '#tag_block .tag' );
 		for( var TagCount = 0, len = TagAnchor.length; TagCount < len; TagCount++ )
 		{
-			TagList.push( TagAnchor[TagCount].textContent );
+			tagList.push( TagAnchor[TagCount].textContent );
 		}
 
 		/* カテゴリ */
-		for( var Cat in CR )
+		for( var ruleCat in ruleList )
 		{
-			var Category = Cat.length ? Cat + kindSep : '';
+			var category = ruleCat.length ? ruleCat + kindSep : '';
 			/* クリップ */
-			for( var Clip in CR[Cat] )
+			for( var ruleClip in ruleList[ruleCat] )
 			{
 				/* 正規表現条件 */
-				for( var CRCount = 0, CRLen = CR[Cat][Clip].length; CRCount < CRLen; CRCount++ )
+				for( var ruleListCount = 0, ruleListLen = ruleList[ruleCat][ruleClip].length;
+					ruleListCount < ruleListLen; ruleListCount++ )
 				{
 					/* 取得タグ */
-					for( var TLCount = TagList.length - 1; TLCount >= 0; TLCount-- )
+					for( var tagListCount = tagList.length - 1; tagListCount >= 0; tagListCount-- )
 					{
-						var ClassRegex	= new RegExp( CR[Cat][Clip][CRCount], 'i' );
-						var ClipRegex	= new RegExp( Clip, 'i' );
-						if( ( ClassRegex.test( TagList[TLCount] ) || ( ClipRegex.test( TagList[TLCount], 'i' ) ) ) )
+						var classRegex	= new RegExp( ruleList[ruleCat][ruleClip][ruleListCount], 'i' );
+						var clipRegex	= new RegExp( ruleClip, 'i' );
+						if(	classRegex.test( tagList[tagListCount] ) ||
+							clipRegex.test( tagList[tagListCount], 'i' ) )
 						{
-							var RadioList = new ByClass( 'ClipRadio' );
-							for( var RadioCount = 0, RadioLen = RadioList.length; RadioCount < RadioLen; RadioCount++ )
+							var radioList = byClass( 'ClipRadio' );
+							for( var radioCount = 0, radioLen = radioList.length; radioCount < radioLen; radioCount++ )
 							{
-								if( RadioList[RadioCount].dataset.radioName === ( Category + Clip ) )
+								if( radioList[radioCount].dataset.radioName === ( category + ruleClip ) )
 								{
-									return( RadioList[RadioCount] );
+									return( radioList[radioCount] );
 								}
 							}
 						}
@@ -937,39 +928,39 @@ function RemodelAddClip()
 	} )( classifyRule );
 
 	/* 推定クリップがある場合は置き換え */
-	if( PresumedClip !== '' )
+	if( presumedClip !== '' )
 	{
-		SelectedRadio = PresumedClip;
+		selectedRadio = presumedClip;
 	}
 	/*}}}*/
 
 	/* ラジオボタン初期チェック {{{*/
-	( function( Radio )
+	( function( radio )
 	{
-		if( Radio )
+		if( radio )
 		{
-			Radio.checked = true;
+			radio.checked = true;
 
 			/* ラジオボタンチェックイベント発行 */
-			var RadioCheckEvent = new CreEve( 'MouseEvents' );
-			RadioCheckEvent.initEvent( 'change', false, true );
-			Radio.dispatchEvent( RadioCheckEvent );
+			var radioCheckEvent = creEve( 'MouseEvents' );
+			radioCheckEvent.initEvent( 'change', false, true );
+			radio.dispatchEvent( radioCheckEvent );
 		}
-	})( SelectedRadio );
+	})( selectedRadio );
 	/*}}}*/
 
 	/* ラジオボタン所属先タブ検索 {{{*/
 	( function()
 	{
-		var Tabs = new QSelA( '.ClipKindsTab' );
-		for( var TabCount = 0, len = Tabs.length; TabCount < len; TabCount++ )
+		var tabs = qSelA( '.ClipKindsTab' );
+		for( var tabCount = 0, len = tabs.length; tabCount < len; tabCount++ )
 		{
-			if( Tabs[TabCount].dataset.tabName === SelectedRadio.dataset.tabName )
+			if( tabs[tabCount].dataset.tabName === selectedRadio.dataset.tabName )
 			{
 				/* タブクリックイベント発行 */
-				var ClickEvent = new CreEve( 'MouseEvents' );
-				ClickEvent.initEvent( 'click', false, true );
-				Tabs[TabCount].dispatchEvent( ClickEvent );
+				var clickEvent = creEve( 'MouseEvents' );
+				clickEvent.initEvent( 'click', false, true );
+				tabs[tabCount].dispatchEvent( clickEvent );
 				return;
 			}
 		}
@@ -977,7 +968,7 @@ function RemodelAddClip()
 	/*}}}*/
 
 	/* クリップ完了で自動で閉じる {{{*/
-	( new ByID( 'clip_message')).addEventListener(
+	byID( 'clip_message').addEventListener(
 							'DOMAttrModified',
 							function( e )
 							{
@@ -1004,18 +995,18 @@ window.addEventListener(
 		if( /\/seiga\/im\d+/.test( window.location.href ) )
 		{
 			/* 静画画像のクリップ追加を改造 */
-			new RemodelAddClip();
+			remodelAddClip();
 
 			/* ヘッダに開閉を付ける */
-			new RemodelIllustHeader();
+			remodelIllustHeader();
 		}
 		/* クリップのハンドラ */
 		else if( /\/my\/clip.*/.test( window.location.href ) )
 		{
 			/* クリップメニューの改造 */
-			new RemodelClipMenu();
+			remodelClipMenu();
 			/* クリップページの改造 */
-			new RemodelClipPage();
+			remodelClipPage();
 		}
 		/* イラスト定点観測のハンドラ */
 		else if( /\/my\/personalize/.test( window.location.href ) )
