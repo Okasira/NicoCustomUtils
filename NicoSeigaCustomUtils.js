@@ -191,7 +191,7 @@ function remodelClipMenu()
 				var clipName = clipText;
 
 				/* セパレータ有りかチェック */
-				var sepCheck = new RegExp( kindSep );
+				var sepCheck	= new RegExp( kindSep );
 				if( sepCheck.test( clipText ) )
 				{
 					/* カテゴリメニュー未作成の場合は新規作成 */
@@ -203,6 +203,7 @@ function remodelClipMenu()
 						newMenuList[kindText] = createNewMenu( kindText );
 					}
 				}
+				sepCheck = void 0;
 
 				/* 新メニューに移し替え */
 				var	newMenu = byClass( newMenuList[kindText].firstChild, 'NewMenuList' )[0];
@@ -265,10 +266,9 @@ function remodelClipMenu()
 		{
 			this.cloneBase = creEle( 'div' );
 		};
-
-		CreatePopup.prototype.create	= function( popText )
+		CreatePopup.prototype.create = function( popText )
 		{
-			var popupDiv	= this.cloneBase.cloneNode( true );
+			var popupDiv		= this.cloneBase.cloneNode( true );
 			popupDiv.className	= 'IllustCountPop';
 			popupDiv.appendChild( creTNode( popText ) );
 			return( popupDiv );
@@ -311,34 +311,35 @@ function remodelClipPage()
 	/* 削除されたイラスト全チェックボタン追加 {{{*/
 	( function()
 	{
-		var DeleteIllustCheck = creEle( 'span' );
-		DeleteIllustCheck.appendChild( creTNode( '削除されたイラストを全て' ) );
-		var CheckButton = creEle( 'input' );
-		CheckButton.id			= 'deleteIllustSelectButton';
-		CheckButton.className	= 'delete';
-		CheckButton.type		= 'button';
-		CheckButton.value		= ' 選択 ';
-		CheckButton.addEventListener(
+		var deleteIllustCheck	= creEle( 'span' );
+		deleteIllustCheck.appendChild( creTNode( '削除されたイラストを全て' ) );
+
+		var checkButton			= creEle( 'input' );
+		checkButton.id			= 'deleteIllustSelectButton';
+		checkButton.className	= 'delete';
+		checkButton.type		= 'button';
+		checkButton.value		= ' 選択 ';
+		checkButton.addEventListener(
 			'click',
 			function()
 			{
-				var IllustList = byClass( 'clip_thumb' );
-				for( var count = 0, len = IllustList.length; count < len; count++ )
+				var illustList = byClass( 'clip_thumb' );
+				for( var count = 0, len = illustList.length; count < len; count++ )
 				{
-					var Illust = IllustList[count];
-					if( /deleted\.png$/.test( byTag( Illust, 'img' ) [0].src )		||
-						/pic_no_disp\.gif$/.test( byTag( Illust, 'img' )[0].src )	)
+					var illust = illustList[count];
+					if( /deleted\.png$/.test( byTag( illust, 'img' ) [0].src )		||
+						/pic_no_disp\.gif$/.test( byTag( illust, 'img' )[0].src )	)
 					{
-						byClass( Illust, 'image_check' )[0].checked = true;
+						byClass( illust, 'image_check' )[0].checked = true;
 					}
 				}
 			},
 			false
 			);
 
-		DeleteIllustCheck.appendChild( CheckButton );
-		DeleteIllustCheck.appendChild( creTNode( 'する' ) );
-		byID( 'clip_area' ).insertBefore( DeleteIllustCheck, byClass( 'mode_button_list'  )[0] );
+		deleteIllustCheck.appendChild( checkButton );
+		deleteIllustCheck.appendChild( creTNode( 'する' ) );
+		byID( 'clip_area' ).insertBefore( deleteIllustCheck, byClass( 'mode_button_list'  )[0] );
 	} )();
 	/*}}}*/
 
@@ -362,7 +363,7 @@ function remodelClipPage()
 	{
 //		/* イラストページ画像のプリフェッチクロージャ {{{*/
 //		/* 端末が重いとプリフェッチも重くなりそうなのでコメントアウト */
-//		var AddThumbPrefetch = ( function()
+//		var addThumbPrefetch = ( function()
 //		{
 //			this.cloneBase	= creEle( 'img' );
 //
@@ -370,15 +371,15 @@ function remodelClipPage()
 //			{
 //				setPrefetch: function( center_img_inner )
 //				{
-//					var IllustThumb				= this.cloneBase.cloneNode( true );
-//					var IllustSmall				= byTag( center_img_inner, 'img' )[0].src;
-//					var IllustMedium			= /^(http:\/\/lohas\.nicoseiga\.jp\/thumb\/\d+)q\?/.exec( IllustSmall );
-//					if( IllustMedium !== null )
+//					var illustThumb				= this.cloneBase.cloneNode( true );
+//					var illustSmall				= byTag( center_img_inner, 'img' )[0].src;
+//					var illustMedium			= /^(http:\/\/lohas\.nicoseiga\.jp\/thumb\/\d+)q\?/.exec( illustSmall );
+//					if( illustMedium !== null )
 //					{
-//						IllustThumb.src				= IllustMedium[1] + 'i?';
-//						IllustThumb.style.display	= 'none';
-//						IllustThumb.style.position	= 'absolute';
-//						center_img_inner.appendChild( IllustThumb );
+//						illustThumb.src				= illustMedium[1] + 'i?';
+//						illustThumb.style.display	= 'none';
+//						illustThumb.style.position	= 'absolute';
+//						center_img_inner.appendChild( illustThumb );
 //					}
 //				}
 //			} );
@@ -429,7 +430,7 @@ function remodelClipPage()
 //			{
 //				illust		= clip_thumbs[count];
 //				imgInner	= byClass( illust, 'center_img_inner' )[0];
-//				AddThumbPrefetch.setPrefetch( imgInner );
+//				addThumbPrefetch.setPrefetch( imgInner );
 //			}
 //		}
 //		/*}}}*/
@@ -813,7 +814,7 @@ function remodelAddClip()
 		{
 			var kindText = '';
 			/* クリップ名にセパレータがある場合は新規カテゴリ追加 {{{*/
-			var kindCheck = new RegExp( kindSep );
+			var kindCheck	= new RegExp( kindSep );
 			if( kindCheck.test( clipList[clipCount].textContent ) )
 			{
 				/* カテゴリ名を取得 */
@@ -830,6 +831,7 @@ function remodelAddClip()
 						createPage.create( 'ClipKindsTabPage', kindText, kindText );
 				}
 			}
+			kindCheck	= void 0;
 			/*}}}*/
 
 			/* ラジオボタンのセットを生成 {{{*/
@@ -892,26 +894,32 @@ function remodelAddClip()
 			tagList.push( TagAnchor[TagCount].textContent );
 		}
 
+		/* ラジオボックスすべてを取得 */
+		var radioList = byClass( 'ClipRadio' );
+
 		/* カテゴリ */
 		for( var ruleCat in ruleList )
 		{
+			/* カテゴリ名生成 */
 			var category = ruleCat.length ? ruleCat + kindSep : '';
+
 			/* クリップ */
 			for( var ruleClip in ruleList[ruleCat] )
 			{
 				/* 正規表現条件 */
-				for( var ruleListCount = 0, ruleListLen = ruleList[ruleCat][ruleClip].length;
-					ruleListCount < ruleListLen; ruleListCount++ )
+				for(	var ruleListCount = 0, ruleListLen = ruleList[ruleCat][ruleClip].length;
+						ruleListCount < ruleListLen; ruleListCount++ )
 				{
+					/* 正規表現オブジェクト生成 */
+					var classRegex	= new RegExp( ruleList[ruleCat][ruleClip][ruleListCount], 'i' );
+					var clipRegex	= new RegExp( ruleClip, 'i' );
+
 					/* 取得タグ */
 					for( var tagListCount = tagList.length - 1; tagListCount >= 0; tagListCount-- )
 					{
-						var classRegex	= new RegExp( ruleList[ruleCat][ruleClip][ruleListCount], 'i' );
-						var clipRegex	= new RegExp( ruleClip, 'i' );
-						if(	classRegex.test( tagList[tagListCount] ) ||
-							clipRegex.test( tagList[tagListCount], 'i' ) )
+						/* タグがルールにマッチするかチェック */
+						if(	classRegex.test( tagList[tagListCount] ) || clipRegex.test( tagList[tagListCount], 'i' ) )
 						{
-							var radioList = byClass( 'ClipRadio' );
 							for( var radioCount = 0, radioLen = radioList.length; radioCount < radioLen; radioCount++ )
 							{
 								if( radioList[radioCount].dataset.radioName === ( category + ruleClip ) )
@@ -921,6 +929,8 @@ function remodelAddClip()
 							}
 						}
 					}
+					classRegex	= void 0;
+					clipRegex	= void 0;
 				}
 			}
 		}
