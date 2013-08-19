@@ -361,30 +361,29 @@ function remodelClipPage()
 	/* クリップページのイラスト機能拡張 {{{*/
 	( function()
 	{
-//		/* イラストページ画像のプリフェッチクロージャ {{{*/
-//		/* 端末が重いとプリフェッチも重くなりそうなのでコメントアウト */
-//		var addThumbPrefetch = ( function()
-//		{
-//			this.cloneBase	= creEle( 'img' );
-//
-//			return(
-//			{
-//				setPrefetch: function( center_img_inner )
-//				{
-//					var illustThumb				= this.cloneBase.cloneNode( true );
-//					var illustSmall				= byTag( center_img_inner, 'img' )[0].src;
-//					var illustMedium			= /^(http:\/\/lohas\.nicoseiga\.jp\/thumb\/\d+)q\?/.exec( illustSmall );
-//					if( illustMedium !== null )
-//					{
-//						illustThumb.src				= illustMedium[1] + 'i?';
-//						illustThumb.style.display	= 'none';
-//						illustThumb.style.position	= 'absolute';
-//						center_img_inner.appendChild( illustThumb );
-//					}
-//				}
-//			} );
-//		} )();
-//		/*}}}*/
+		/* イラストページ画像のプリフェッチクロージャ {{{*/
+		var addThumbPrefetch = ( function()
+		{
+			this.cloneBase	= creEle( 'img' );
+
+			return(
+			{
+				setPrefetch: function( center_img_inner )
+				{
+					var illustThumb				= this.cloneBase.cloneNode( true );
+					var illustSmall				= byTag( center_img_inner, 'img' )[0].src;
+					var illustMedium			= /^(http:\/\/lohas\.nicoseiga\.jp\/thumb\/\d+)q\?/.exec( illustSmall );
+					if( illustMedium !== null )
+					{
+						illustThumb.src				= illustMedium[1] + 'i?';
+						illustThumb.style.display	= 'none';
+						illustThumb.style.position	= 'absolute';
+						center_img_inner.appendChild( illustThumb );
+					}
+				}
+			} );
+		} )();
+		/*}}}*/
 
 		/* イラストにクリックハンドラを追加 {{{*/
 		function addClickHandler( illustList )
@@ -418,22 +417,21 @@ function remodelClipPage()
 		}
 		/*}}}*/
 
-//		/* イメージプリフェッチを追加 {{{ */
-//		/* 端末が重いとプリフェッチも重くなりそうなのでコメントアウト */
-//		function addPrefetchImage( illustList )
-//		{
-//			/* イラストリストから該当する物を抽出 */
-//			var clip_thumbs = byClass( illustList, 'clip_thumb' );
-//
-//			/* クリップリスト内のイラスト分回す */
-//			for( var count = 0, len = clip_thumbs.length, illust, imgInner; count < len; count++ )
-//			{
-//				illust		= clip_thumbs[count];
-//				imgInner	= byClass( illust, 'center_img_inner' )[0];
-//				addThumbPrefetch.setPrefetch( imgInner );
-//			}
-//		}
-//		/*}}}*/
+		/* イメージプリフェッチを追加 {{{ */
+		function addPrefetchImage( illustList )
+		{
+			/* イラストリストから該当する物を抽出 */
+			var clip_thumbs = byClass( illustList, 'clip_thumb' );
+
+			/* クリップリスト内のイラスト分回す */
+			for( var count = 0, len = clip_thumbs.length, illust, imgInner; count < len; count++ )
+			{
+				illust		= clip_thumbs[count];
+				imgInner	= byClass( illust, 'center_img_inner' )[0];
+				addThumbPrefetch.setPrefetch( imgInner );
+			}
+		}
+		/*}}}*/
 
 		/* 表示されている画像の元画像リンクリストを生成 {{{*/
 		function addIllustAnchorCreate( illustList )
@@ -465,8 +463,7 @@ function remodelClipPage()
 		/*}}}*/
 
 		/* イラストページ画像のプリフェッチ追加 {{{*/
-//		/* 端末が重いとプリフェッチも重くなりそうなのでコメントアウト */
-//		addPrefetchImage( clipImageList );
+		addPrefetchImage( clipImageList );
 		/*}}}*/
 
 		/* リンクリスト表示DIVを生成 {{{*/
@@ -488,8 +485,7 @@ function remodelClipPage()
 					/* 追加された要素にクリックハンドラを追加 */
 					addClickHandler( e.target );
 					/* 追加された要素にプリフェッチを追加 */
-//					/* 端末が重いとプリフェッチも重くなりそうなのでコメントアウト */
-//					addPrefetchImage( e.target );
+					addPrefetchImage( e.target );
 					/* 追加された要素から元画像のリンクを抽出 */
 					addIllustAnchorCreate( e.target );
 				}
@@ -560,13 +556,14 @@ function remodelAddClip()
 		/*}}}*/
 
 		/* ラジオボックスリストアウターを生成 {{{*/
-		var ListFrameOuter	= radioBoxListFrame.appendChild( creEle( 'div' ) );
-		ListFrameOuter.id	= 'RadioBoxListOuter';
+		var listFrameOuter	= radioBoxListFrame.appendChild( creEle( 'div' ) );
+		listFrameOuter.id	= 'RadioBoxListOuter';
+		radioBoxListFrame.style.left  = ( byID( 'illust_main' ).offsetWidth + 4 ) + 'px';
 		/*}}}*/
 
 		/* クリップ追加ボタン */
 		/* クリップ追加ボタン枠を生成 {{{*/
-		var radioBoxClipButtonOuter = ListFrameOuter.appendChild( creEle( 'div' ) );
+		var radioBoxClipButtonOuter = listFrameOuter.appendChild( creEle( 'div' ) );
 		radioBoxClipButtonOuter.id	= 'RadioBoxClipButtonOuter';
 		/*}}}*/
 
@@ -576,39 +573,8 @@ function remodelAddClip()
 		radioBoxClipButton.id		= 'RadioBoxClipButton';
 		/*}}}*/
 
-		/* クリップスライドボタンを生成 {{{*/
-		var radioBoxSlideButton		= radioBoxClipButtonOuter.appendChild( creEle( 'div' ) );
-		radioBoxSlideButton.id		= 'RadioBoxSlideButton';
-		radioBoxSlideButton.appendChild( creEle( 'span' ));
-		radioBoxSlideButton.lastChild.id		= 'SlideText';
-		radioBoxSlideButton.lastChild.className	= '';
-		radioBoxSlideButton.lastChild.appendChild( creTNode( 'ｺﾒﾝﾄ表示≫' ) );
-		/*}}}*/
-
 		/* まとめて追加 */
 		byID( 'illust_main' ).appendChild( remodelFrag );
-		/*}}}*/
-
-		/* クリップスライドイベント追加 {{{*/
-		radioBoxSlideButton.addEventListener(
-			'click',
-			function()
-			{
-				/* クリップ枠をスライド */
-				byID( 'RadioBoxListFrame' ).classList.toggle( 'open' );
-				var SlideText = byID( 'SlideText' );
-				SlideText.classList.toggle( 'open' );
-
-				/* ボタンのテキストを書き換え */
-				if( SlideText.classList.contains( 'open' ) )
-				{
-					SlideText.textContent	= '≪ｺﾒﾝﾄ非表示';
-				} else {
-					SlideText.textContent	= 'ｺﾒﾝﾄ表示≫';
-				}
-			},
-			'false'
-			);
 		/*}}}*/
 
 		/* クリップ追加ボタンイベント {{{

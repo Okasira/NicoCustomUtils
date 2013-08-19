@@ -161,14 +161,13 @@ function RemodelIllustAddClipStyle()
 	'}'							+
 
 	// クリップ時のメッセージ枠移動
-/*
+
 	'#clip_message'								+
 	'{'											+
 	'	left:			0px		!important;'	+
 	'	right:			auto	!important;'	+
 	'	margin-left:	354px	!important;'	+
 	'}'											+
-*/
 
 	// 元のクリップボタンを非表示
 	'#add_clip'									+
@@ -188,21 +187,15 @@ function RemodelIllustAddClipStyle()
 	'{'											+
 	'	display:		block;'					+
 	'	position:		absolute;'				+
-	'	top:			5px;'					+
-	'	right:			6px;'					+
-	'	width:			335px;'					+
+	'	top:			0px;'					+
+	'	width:			300px;'					+
 	'	height:			642px;'					+
-	'	padding:		3px;'					+
+	'	padding:		4px;'					+
 	'	border:			1px solid silver;'		+
-	'	margin-left:	10px;'					+
 	'	border-radius:	6px;'					+
 	'	background:		linear-gradient( to bottom, aliceblue, lavender );'	+
-	'	transition:		right 0.5s ease-out 0s;'							+
+	'	box-shadow:		5px 5px 5px rgba(0, 0, 0, 0.2);'					+
 	'}'											+
-	'#RadioBoxListFrame.open'				+
-	'{'										+
-	'	right:	-343px;'					+
-	'}'										+
 	/*}}}*/
 
 	/* クリップリストフレーム内のアウタースタイル {{{*/
@@ -211,6 +204,9 @@ function RemodelIllustAddClipStyle()
 	'	display:		block;'				+
 	'	position:		relative;'			+
 	'	height:			634px;'				+
+	'	padding:		3px;'				+ 
+	'	border:			1px solid silver;'	+ 
+	'	border-radius:  4px;'				+
 	'	background:		mintcream;'			+
 	'}'										+
 	/*}}}*/
@@ -243,30 +239,6 @@ function RemodelIllustAddClipStyle()
 	'	background:		url("http://seiga.nicovideo.jp/img/illust/clip_on.png") no-repeat;'	+
 	'}'										+
 	/*}}}*/
-
-	// クリップスライドボタン
-	'#RadioBoxSlideButton'					+
-	'{'										+
-	'	display:		block;'				+
-	'	position:		absolute;'			+
-	'	top:			0px;'				+
-	'	right:			4px;'				+
-	'	width:			auto;'				+
-	'	height:			14px;'				+
-	'	padding:		2px;'				+
-	'	border:			1px solid #E68268;'	+
-	'	border-radius:	6px;'								+
-	'	box-shadow:		2px 2px 2px rgba(0, 0, 0, 0.3);'	+
-	'	font-size:		12px;'				+
-	'	font-weight:	600;'				+
-	'	cursor:			pointer;'			+
-	'	background:		#FFD6C6;'			+
-	'}'										+
-	'#RadioBoxSlideButton:hover'			+
-	'{'										+
-	'	border:			1px solid #E2A144;'	+
-	'	background:		#FFF5C2;'			+
-	'}'										+
 
 	/* ラジオボタン＋ラベル {{{*/
 	// クリップ選択枠
@@ -302,7 +274,7 @@ function RemodelIllustAddClipStyle()
 	'.ClipRadioLabel'					+
 	'{'									+
 	'	display:		inline-block;'	+
-	'	width:			316px;'			+
+	'	width:			272px;'			+
 	'	margin-left:	4px;'			+
 	'	line-height:	20px;'			+
 	'	font-size:		15px;'			+
