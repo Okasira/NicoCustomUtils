@@ -362,27 +362,24 @@ function remodelClipPage()
 	( function()
 	{
 		/* イラストページ画像のプリフェッチクロージャ {{{*/
-		var addThumbPrefetch = ( function()
+		var AddThumbPrefetch = function()
 		{
 			this.cloneBase	= creEle( 'img' );
-
-			return(
+		};
+		AddThumbPrefetch.prototype.setPrefetch	= function( center_img_inner )
+		{
+			var illustThumb				= this.cloneBase.cloneNode( true );
+			var illustSmall				= byTag( center_img_inner, 'img' )[0].src;
+			var illustMedium			= /^(http:\/\/lohas\.nicoseiga\.jp\/thumb\/\d+)q\?/.exec( illustSmall );
+			if( illustMedium !== null )
 			{
-				setPrefetch: function( center_img_inner )
-				{
-					var illustThumb				= this.cloneBase.cloneNode( true );
-					var illustSmall				= byTag( center_img_inner, 'img' )[0].src;
-					var illustMedium			= /^(http:\/\/lohas\.nicoseiga\.jp\/thumb\/\d+)q\?/.exec( illustSmall );
-					if( illustMedium !== null )
-					{
-						illustThumb.src				= illustMedium[1] + 'i?';
-						illustThumb.style.display	= 'none';
-						illustThumb.style.position	= 'absolute';
-						center_img_inner.appendChild( illustThumb );
-					}
-				}
-			} );
-		} )();
+				illustThumb.src				= illustMedium[1] + 'i?';
+				illustThumb.style.display	= 'none';
+				illustThumb.style.position	= 'absolute';
+				center_img_inner.appendChild( illustThumb );
+			}
+		};
+		var addThumbPrefetch = new AddThumbPrefetch();
 		/*}}}*/
 
 		/* イラストにクリックハンドラを追加 {{{*/
