@@ -21,12 +21,34 @@ var tabElementAttr		= 'TabElement';
 var tabPageElementAttr	= 'TabPageElement';
 var kindSep				= '：';
 var closeTime			= 100;
-var clipAlartNum		= 480;
+var clipAlartNum		= 460;
 
 /* 分類ルール {{{*/
 var classifyRule	=
 {
 	/* 上の方が先に判定 */
+	'その他':
+	{
+
+		'禁書':				[ 'とある科学の超電磁砲', 'とある魔術の禁書目録' ],
+		'TypeMoon':			[ 'Fate', '月姫', 'イリヤ', 'セイバー', ],
+		'艦これ':			[
+								'ヲ級', '島風', '金剛', '敷波', 'ぜかまし', '榛名', '時雨', '大和', '那珂', '川内',
+								'陸奥', '愛宕', '翔鶴', '加賀', '瑞鳳', '長門', '陽炎', '赤城', '暁', '天龍', '龍田', '高雄',
+								'夕張', '村雨', '蒼龍',
+								'艦これ', '艦隊これくしょん', '[^巨乳]艦隊',
+							],
+	},
+	'アイマス':
+	{
+		'モバマス':			[ 'モバマス', 'モゲマス', 'デレマス', 'シンデレラガールズ' ],
+		'アイマス':			[
+								'春香', '伊織', 'あずさ', '千早', 'やよい', '真[^剣]', '雪歩',
+								'律子', '亜美', '真美',	'高木社長', '小鳥', '美希', '響', '貴音', '黒井社長',
+								'日高舞', '日高愛', '水谷絵理', '秋月涼',
+								'アイマス', 'アイドルマスター'
+							],
+	},
 	'東方':
 	{
 		'もみじもみもみ':	[ '犬走', '椛', 'もみじもみもみ', 'もみじ' ],
@@ -37,7 +59,7 @@ var classifyRule	=
 		'輝針城':			[ 'わかさぎ', '赤蛮奇', '影狼', '九十九', '八橋', '弁々', '正邪', '針妙丸', '九十九姉妹', '雷鼓' ],
 		'神霊廟':			[ '幽谷', '芳香', '青娥', '屠自古', '布都', '神子', 'マミゾウ' ],
 		'非想天則':			[ '永江', '天子', '萃香' ],
-		'星蓮船':			[ 'ナズ', '小傘', '一輪', '雲山', '村紗', '寅丸', '聖', 'ぬえ' ],
+		'星蓮船':			[ 'ナズ', '小傘', '一輪', '雲山', '村紗', '寅丸', '聖[^地]', 'ぬえ', '鵺' ],
 		'地霊殿':			[ 'キスメ', '黒谷', 'パルスィ', '勇儀', '古明地', '燐', '霊烏路', '(?:|お)空[^母]', 'さとり', 'こいし' ],
 		'風神録':			[ '静葉', '穣子', '雛', 'にとり', '秋姉妹', 'ニトアリ' ],
 		'花映塚':			[ '幽香', 'メディスン', '(?:|小野塚)小町', '(?:|四季)映姫' ],
@@ -47,31 +69,9 @@ var classifyRule	=
 		'霊夢・魔理沙':		[ '霊夢', '魔理沙' ],
 		'いろいろ':			[ '東方' ],
 	},
-	'アイマス':
-	{
-		'モバマス':			[ 'モバマス', 'モゲマス', 'デレマス', 'シンデレラガールズ' ],
-		'アイマス':			[
-								'春香', '伊織', 'あずさ', '千早', 'やよい', '真', '雪歩',
-								'律子', '亜美', '真美',	'高木社長', '小鳥', '美希', '響', '貴音', '黒井社長',
-								'日高舞', '日高愛', '水谷絵理', '秋月涼',
-								'アイマス', 'アイドルマスター'
-							],
-	},
-	'その他':
-	{
-
-		'禁書':				[ 'とある科学の超電磁砲', 'とある魔術の禁書目録' ],
-		'TypeMoon':			[ 'Fate', '月姫', 'イリヤ', 'セイバー', ],
-		'艦これ':			[
-								'ヲ級', '島風', '金剛', '敷波', 'ぜかまし', '榛名', '時雨', '大和', '那珂', '川内',
-								'陸奥', '愛宕', '翔鶴', '加賀', '瑞鳳', '長門', '陽炎', '赤城', '暁', '天龍', '龍田', '高雄',
-								'夕張', '村雨', '蒼龍',
-								'艦これ', '艦隊これくしょん', '艦隊',
-							],
-	},
 	'':
 	{
-		'ちちしりふともも':	[ 'おっぱい', '尻', 'ふともも', '境界線上のホライゾン', 'ちちましい', '乳' ],
+		'ちちしりふともも':	[ 'おっぱい', '尻', 'ふともも', '境界線上のホライゾン', 'ちちましい', '乳', 'FSS' ],
 		'その他':			[ '.*' ],
 	}
 };
@@ -396,6 +396,8 @@ function remodelClipPage()
 		/* イラストにクリックハンドラを追加 {{{*/
 		function addClickHandler( illustList )
 		{
+			if( illustList === null ){ return; }
+
 			/* ハンドラ本体 */
 			function handler( e )
 			{
@@ -428,6 +430,8 @@ function remodelClipPage()
 		/* イメージプリフェッチを追加 {{{ */
 		function addPrefetchImage( illustList )
 		{
+			if( illustList === null ){ return; }
+
 			/* イラストリストから該当する物を抽出 */
 			var clip_thumbs = byClass( illustList, 'clip_thumb' );
 
@@ -444,6 +448,8 @@ function remodelClipPage()
 		/* 表示されている画像の元画像リンクリストを生成 {{{*/
 		function addIllustAnchorCreate( illustList )
 		{
+			if( illustList === null ){ return; }
+
 			var documentFrag		= document.createDocumentFragment();
 			var cloneBase			= creEle( 'a' );
 			var clipList			= byClass( illustList, 'clip_thumb' );
@@ -501,6 +507,60 @@ function remodelClipPage()
 			false
 			);
 		/*}}}*/
+	} )();
+	/*}}}*/
+
+	/* クリップページのページ選択を25ページ表示する {{{*/
+	( function()
+	{
+		var pagerDiv	= byClass( 'mg_pager' )[0];
+		var pagerUL		= byTag( pagerDiv, 'ul' )[0];
+
+		/* スタイル調整 */
+		var pager	= byClass( 'mg_pager' )[0];
+		pager.style.cssFloat	= 'none';
+		pager.style.textAlign	= 'center';
+
+		/* ページ番号抽出 */
+		var pageNumber	= 1;
+		if( ( new RegExp( 'page' ) ).test( location.href ) )
+		{
+			pageNumber = Number( location.href.match( 'page=(\\d+)' )[1], 10 );
+		}
+
+		/* 新しいページ選択を生成 */
+		var newPageSel;
+		var newPager	= document.createDocumentFragment();
+		for( var count = 1; count < 26; count++ )
+		{
+			/* ページセレクタ生成 */
+			newPageSel = creEle( 'li' );
+			if( count === pageNumber )
+			{
+				newPageSel.appendChild( creEle( 'span' ) );
+				newPageSel.firstChild.appendChild( creTNode( pageNumber ) );
+				newPageSel.firstChild.classList.add( 'current' );
+			} else {
+				newPageSel.appendChild( creEle( 'a' ) );
+				newPageSel.firstChild.href	= 'http://seiga.nicovideo.jp/my/clip/';
+				newPageSel.firstChild.href	+= location.href.match( '\/clip\/(\\d+)' )[1];
+				newPageSel.firstChild.href	+= '?page=';
+				newPageSel.firstChild.href	+= count;
+				newPageSel.firstChild.href	+= '&sort=clip_number';
+				newPageSel.firstChild.textContent	= count;
+			}
+			newPager.appendChild( newPageSel );
+		}
+
+		/* 元のページ選択を削除 */
+		while( pagerUL.hasChildNodes() )
+		{
+			pagerUL.removeChild( pagerUL.firstChild );
+		}
+
+		/* 新しいページ選択を追加 */
+		pagerUL.appendChild( newPager );
+
 	} )();
 	/*}}}*/
 
