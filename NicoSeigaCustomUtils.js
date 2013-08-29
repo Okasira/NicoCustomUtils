@@ -522,11 +522,18 @@ function remodelClipPage()
 		pager.style.textAlign	= 'center';
 
 		/* ページ番号抽出 */
-		var pageNumber	= 1;
+		var pageNumber;
 		if( ( new RegExp( 'page' ) ).test( location.href ) )
 		{
-			pageNumber = Number( location.href.match( 'page=(\\d+)' )[1], 10 );
+			pageNumber	= Number( location.href.match( 'page=(\\d+)' )[1], 10 );
+		} else {
+			pageNumber	= 1;
 		}
+
+		/* クリップ番号抽出 */
+		var clipNumber;
+		var clipHref	= byTag( qSel( '.clip_item.clip_item_selected' ), 'a' )[0].href;
+		clipNumber	= Number( clipHref.match( '\/my\/clip\/(\\d+)' )[1], 10 );
 
 		/* 新しいページ選択を生成 */
 		var newPageSel;
@@ -543,7 +550,7 @@ function remodelClipPage()
 			} else {
 				newPageSel.appendChild( creEle( 'a' ) );
 				newPageSel.firstChild.href	= 'http://seiga.nicovideo.jp/my/clip/';
-				newPageSel.firstChild.href	+= location.href.match( '\/clip\/(\\d+)' )[1];
+				newPageSel.firstChild.href	+= clipNumber;
 				newPageSel.firstChild.href	+= '?page=';
 				newPageSel.firstChild.href	+= count;
 				newPageSel.firstChild.href	+= '&sort=clip_number';
